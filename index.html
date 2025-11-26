@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>B2B Fixed Wireless – Executive SLA Dashboard (Mockup)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>B2B Fixed Wireless – Executive SLA Dashboard</h1>
+      <p>Mockup only – static data to illustrate KPIs and layout.</p>
+    </div>
+    <div class="topbar-right">
+      <label for="regionSelect">Region</label>
+      <select id="regionSelect">
+        <option value="all">All</option>
+        <option value="west">West</option>
+        <option value="central">Central</option>
+        <option value="east">East</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="kpi-row">
+      <div class="kpi-card" id="kpi-availability">
+        <div class="kpi-label">Availability (avg)</div>
+        <div class="kpi-value" data-kpi="availability">99.4%</div>
+        <div class="kpi-subtitle">Target ≥ 99.5% monthly in-window</div>
+      </div>
+      <div class="kpi-card" id="kpi-sla">
+        <div class="kpi-label">Customers within SLA</div>
+        <div class="kpi-value" data-kpi="slaWithin">88%</div>
+        <div class="kpi-subtitle">Based on loss, latency &amp; availability</div>
+      </div>
+      <div class="kpi-card" id="kpi-loss-latency">
+        <div class="kpi-label">Uplink loss p95 / Latency p95</div>
+        <div class="kpi-value" data-kpi="lossLatency">0.48% • 78 ms</div>
+        <div class="kpi-subtitle">Targets: loss ≤ 0.5% p95; latency ≤ 80 ms</div>
+      </div>
+      <div class="kpi-card" id="kpi-goodput">
+        <div class="kpi-label">Downlink goodput p50</div>
+        <div class="kpi-value" data-kpi="goodput">182 Mbps</div>
+        <div class="kpi-subtitle">Mocked modem-level user throughput</div>
+      </div>
+    </section>
+
+    <section class="grid grid-2">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Customer SLA Scorecard (Mock)</h2>
+          <p>Static mock data – replace with real feed later.</p>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Region</th>
+                <th>Vertical</th>
+                <th>Avail %</th>
+                <th>Loss p95 %</th>
+                <th>Lat p95 ms</th>
+                <th>Down p50 Mbps</th>
+                <th>Usage TB</th>
+                <th>SLA</th>
+              </tr>
+            </thead>
+            <tbody id="customerTableBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Transport Performance Trends (Mock)</h2>
+          <p>Availability, loss and latency over time.</p>
+        </div>
+        <canvas id="transportChart" height="260"></canvas>
+      </div>
+    </section>
+
+    <section class="grid grid-2">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Top Consumers by Usage (Mock)</h2>
+          <p>30-day downstream usage in TB.</p>
+        </div>
+        <canvas id="topConsumersChart" height="260"></canvas>
+      </div>
+
+      <div class="panel dashed">
+        <div class="panel-header">
+          <h2>Radio Quality vs Goodput (Placeholder)</h2>
+          <p>In a real implementation, this would plot SINR / RSRP vs throughput.</p>
+        </div>
+        <div class="placeholder">
+          <p>This tile intentionally left as a placeholder. Use it later for cell-level radio / goodput scatter plot or Wi‑Fi journey metrics.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Mock dashboard for B2B Fixed Wireless – no live data. Built as a static HTML/CSS/JS example.
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
