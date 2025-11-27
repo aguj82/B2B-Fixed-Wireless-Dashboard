@@ -88,31 +88,86 @@ const customers = [
   },
 ];
 
-const transportTimeSeries = [
-  { date: "Day -6", region: "west", availability: 99.4, lossP95: 0.45, latencyP95: 72 },
-  { date: "Day -5", region: "west", availability: 99.3, lossP95: 0.52, latencyP95: 78 },
-  { date: "Day -4", region: "west", availability: 99.5, lossP95: 0.4, latencyP95: 70 },
-  { date: "Day -3", region: "west", availability: 99.2, lossP95: 0.48, latencyP95: 74 },
-  { date: "Day -2", region: "west", availability: 99.6, lossP95: 0.36, latencyP95: 68 },
-  { date: "Day -1", region: "west", availability: 99.7, lossP95: 0.39, latencyP95: 69 },
-  { date: "Today", region: "west", availability: 99.5, lossP95: 0.42, latencyP95: 71 },
+const REGION_BASELINES = {
+  west: { availability: 99.45, lossP95: 0.46, latencyP95: 72 },
+  central: { availability: 99.05, lossP95: 0.7, latencyP95: 86 },
+  east: { availability: 99.2, lossP95: 0.55, latencyP95: 76 },
+};
 
-  { date: "Day -6", region: "central", availability: 99.1, lossP95: 0.68, latencyP95: 84 },
-  { date: "Day -5", region: "central", availability: 98.9, lossP95: 0.74, latencyP95: 88 },
-  { date: "Day -4", region: "central", availability: 99.0, lossP95: 0.63, latencyP95: 80 },
-  { date: "Day -3", region: "central", availability: 98.8, lossP95: 0.79, latencyP95: 92 },
-  { date: "Day -2", region: "central", availability: 99.0, lossP95: 0.71, latencyP95: 86 },
-  { date: "Day -1", region: "central", availability: 99.1, lossP95: 0.67, latencyP95: 83 },
-  { date: "Today", region: "central", availability: 99.0, lossP95: 0.69, latencyP95: 85 },
+const TIME_RANGE_CONFIG = {
+  hourly: {
+    points: 60,
+    labelFormatter: (offset) => (offset === 0 ? "Now" : `${offset}m ago`),
+    variance: { availability: 0.18, lossP95: 0.12, latencyP95: 5 },
+  },
+  daily: {
+    points: 24,
+    labelFormatter: (offset) => (offset === 0 ? "Now" : `${offset}h ago`),
+    variance: { availability: 0.14, lossP95: 0.1, latencyP95: 4 },
+  },
+  weekly: {
+    points: 7,
+    labelFormatter: (offset) => (offset === 0 ? "Today" : `Day -${offset}`),
+    variance: { availability: 0.12, lossP95: 0.08, latencyP95: 3 },
+  },
+  monthly: {
+    points: 30,
+    labelFormatter: (offset) => (offset === 0 ? "Today" : `${offset}d ago`),
+    variance: { availability: 0.15, lossP95: 0.09, latencyP95: 4 },
+  },
+};
 
-  { date: "Day -6", region: "east", availability: 99.2, lossP95: 0.55, latencyP95: 76 },
-  { date: "Day -5", region: "east", availability: 99.0, lossP95: 0.61, latencyP95: 80 },
-  { date: "Day -4", region: "east", availability: 99.3, lossP95: 0.53, latencyP95: 74 },
-  { date: "Day -3", region: "east", availability: 99.1, lossP95: 0.59, latencyP95: 79 },
-  { date: "Day -2", region: "east", availability: 99.4, lossP95: 0.51, latencyP95: 73 },
-  { date: "Day -1", region: "east", availability: 99.5, lossP95: 0.48, latencyP95: 71 },
-  { date: "Today", region: "east", availability: 99.3, lossP95: 0.52, latencyP95: 75 },
-];
+const TIME_RANGE_LABELS = {
+  hourly: "Last 60 minutes",
+  daily: "Last 24 hours",
+  weekly: "Last 7 days",
+  monthly: "Last 30 days",
+};
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function buildTimeRangeSeries(rangeKey) {
+  const config = TIME_RANGE_CONFIG[rangeKey];
+  const labels = Array.from({ length: config.points }, (_, idx) => {
+    const offset = config.points - idx - 1;
+    return config.labelFormatter(offset);
+  });
+
+  const byRegion = {};
+  Object.entries(REGION_BASELINES).forEach(([region, base]) => {
+    const seed = region.charCodeAt(0) + region.charCodeAt(region.length - 1);
+    byRegion[region] = labels.map((label, idx) => {
+      const multiplier = Math.sin((idx + seed) * 0.55);
+      const availability = clamp(
+        base.availability + multiplier * config.variance.availability,
+        98.6,
+        99.9
+      );
+      const lossP95 = clamp(
+        base.lossP95 + multiplier * config.variance.lossP95,
+        0.15,
+        1.6
+      );
+      const latencyP95 = clamp(
+        base.latencyP95 + multiplier * config.variance.latencyP95,
+        60,
+        115
+      );
+      return { label, availability, lossP95, latencyP95 };
+    });
+  });
+
+  return { labels, byRegion };
+}
+
+const transportTimeSeries = {
+  hourly: buildTimeRangeSeries("hourly"),
+  daily: buildTimeRangeSeries("daily"),
+  weekly: buildTimeRangeSeries("weekly"),
+  monthly: buildTimeRangeSeries("monthly"),
+};
 
 function metricStatus(value, metric) {
   if (metric === "availability") {
@@ -317,29 +372,43 @@ function renderCustomerTable(region, vendor, site) {
 
 let transportChart;
 
-function buildTransportChart(region) {
-  const ctx = document.getElementById("transportChart").getContext("2d");
-  let labels = [];
-  let availabilitySeries = [];
-  let lossSeries = [];
-  let latencySeries = [];
+function transportSeriesForRange(rangeKey, region) {
+  const series = transportTimeSeries[rangeKey];
+  const labels = series?.labels || [];
+
+  if (!series || !labels.length) {
+    return { labels: [], availabilitySeries: [], lossSeries: [], latencySeries: [] };
+  }
 
   if (region === "all") {
-    labels = [...new Set(transportTimeSeries.map((p) => p.date))];
-    labels.forEach((label) => {
-      const points = transportTimeSeries.filter((p) => p.date === label);
-      const avg = (field) => points.reduce((sum, p) => sum + p[field], 0) / points.length;
-      availabilitySeries.push(avg("availability"));
-      lossSeries.push(avg("lossP95"));
-      latencySeries.push(avg("latencyP95"));
+    const regionIds = Object.keys(series.byRegion);
+    const availabilitySeries = labels.map((_, idx) => {
+      const sum = regionIds.reduce((acc, id) => acc + series.byRegion[id][idx].availability, 0);
+      return sum / regionIds.length;
     });
-  } else {
-    const base = transportTimeSeries.filter((p) => p.region === region);
-    labels = base.map((p) => p.date);
-    availabilitySeries = base.map((p) => p.availability);
-    lossSeries = base.map((p) => p.lossP95);
-    latencySeries = base.map((p) => p.latencyP95);
+    const lossSeries = labels.map((_, idx) => {
+      const sum = regionIds.reduce((acc, id) => acc + series.byRegion[id][idx].lossP95, 0);
+      return sum / regionIds.length;
+    });
+    const latencySeries = labels.map((_, idx) => {
+      const sum = regionIds.reduce((acc, id) => acc + series.byRegion[id][idx].latencyP95, 0);
+      return sum / regionIds.length;
+    });
+    return { labels, availabilitySeries, lossSeries, latencySeries };
   }
+
+  const regionSeries = series.byRegion[region] || [];
+  return {
+    labels,
+    availabilitySeries: regionSeries.map((p) => p.availability),
+    lossSeries: regionSeries.map((p) => p.lossP95),
+    latencySeries: regionSeries.map((p) => p.latencyP95),
+  };
+}
+
+function buildTransportChart(region, rangeKey) {
+  const ctx = document.getElementById("transportChart").getContext("2d");
+  const { labels, availabilitySeries, lossSeries, latencySeries } = transportSeriesForRange(rangeKey, region);
 
   if (transportChart) transportChart.destroy();
 
@@ -433,15 +502,58 @@ function updateSelectionPill(region, vendor, site) {
   document.getElementById("selectionPill").textContent = `${regionLabel} • ${vendorLabel} • ${siteLabel}`;
 }
 
+function initTimeRangeControl(currentRange, onRangeChange) {
+  const control = document.getElementById("timeRangeControl");
+  const button = document.getElementById("timeRangeButton");
+  const menu = document.getElementById("timeRangeMenu");
+  const options = Array.from(menu.querySelectorAll("[data-range]"));
+
+  function setActiveRange(rangeKey) {
+    options.forEach((opt) => opt.classList.toggle("active", opt.dataset.range === rangeKey));
+    button.textContent = TIME_RANGE_LABELS[rangeKey];
+  }
+
+  function closeMenu() {
+    control.classList.remove("open");
+    button.setAttribute("aria-expanded", "false");
+  }
+
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const willOpen = !control.classList.contains("open");
+    control.classList.toggle("open", willOpen);
+    button.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  });
+
+  options.forEach((opt) => {
+    opt.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const rangeKey = opt.dataset.range;
+      setActiveRange(rangeKey);
+      onRangeChange(rangeKey);
+      closeMenu();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!control.contains(event.target)) {
+      closeMenu();
+    }
+  });
+
+  setActiveRange(currentRange);
+}
+
 function initDashboard() {
   let selectedRegion = "all";
   let selectedVendor = "all";
   let selectedSite = "all";
+  let selectedTimeRange = "monthly";
 
   function refresh() {
     updateKpiCards(selectedRegion, selectedVendor, selectedSite);
     renderCustomerTable(selectedRegion, selectedVendor, selectedSite);
-    buildTransportChart(selectedRegion);
+    buildTransportChart(selectedRegion, selectedTimeRange);
     renderRegionCards(selectedRegion, (region) => {
       selectedRegion = region;
       selectedSite = "all";
@@ -458,6 +570,11 @@ function initDashboard() {
     });
     updateSelectionPill(selectedRegion, selectedVendor, selectedSite);
   }
+
+  initTimeRangeControl(selectedTimeRange, (rangeKey) => {
+    selectedTimeRange = rangeKey;
+    refresh();
+  });
 
   refresh();
 }
