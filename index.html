@@ -10,96 +10,113 @@
 <body>
   <header class="topbar">
     <div class="topbar-left">
-      <h1>B2B Fixed Wireless – Executive SLA Dashboard</h1>
+      <p class="eyebrow">Executive view • Fixed Wireless</p>
+      <h1>B2B SLA Compliance Snapshot</h1>
+      <p class="subtitle">Availability, packet loss p95 and latency p95 – drilled from region to site, vendor, customer.</p>
     </div>
     <div class="topbar-right">
-      <label for="regionSelect">Region</label>
-      <select id="regionSelect">
-        <option value="all">All</option>
-        <option value="west">West</option>
-        <option value="central">Central</option>
-        <option value="east">East</option>
-      </select>
+      <div class="chip muted">Last 30 days</div>
+      <div class="chip accent">Clickable drill-downs</div>
     </div>
   </header>
 
   <main class="page">
-    <section class="kpi-row">
-      <div class="kpi-card" id="kpi-availability">
+    <section class="intro">
+      <div>
+        <h2>Snapshot of SLA compliance</h2>
+        <p>Designed for executives: the first row tracks the three SLA-defining metrics, then scorecards show where to drill deeper by geography, vendor and customer.</p>
+      </div>
+      <div class="legend">
+        <span class="legend-dot good"></span>
+        <span>On target</span>
+        <span class="legend-dot warn"></span>
+        <span>At risk</span>
+        <span class="legend-dot bad"></span>
+        <span>Out of SLA</span>
+      </div>
+    </section>
+
+    <section class="kpi-row kpi-row-3">
+      <div class="kpi-card" data-metric="availability">
         <div class="kpi-label">Availability (avg)</div>
         <div class="kpi-value" data-kpi="availability">99.4%</div>
-        <div class="kpi-subtitle">Target ≥ 99.5% monthly in-window</div>
+        <div class="kpi-subtitle">Target ≥ 99.5%</div>
       </div>
-      <div class="kpi-card" id="kpi-sla">
+      <div class="kpi-card" data-metric="loss">
+        <div class="kpi-label">Packet Loss p95</div>
+        <div class="kpi-value" data-kpi="lossP95">0.48%</div>
+        <div class="kpi-subtitle">Target ≤ 0.50%</div>
+      </div>
+      <div class="kpi-card" data-metric="latency">
+        <div class="kpi-label">Latency p95</div>
+        <div class="kpi-value" data-kpi="latencyP95">78 ms</div>
+        <div class="kpi-subtitle">Target ≤ 80 ms</div>
+      </div>
+      <div class="kpi-card" data-metric="slaWithin">
         <div class="kpi-label">Customers within SLA</div>
         <div class="kpi-value" data-kpi="slaWithin">88%</div>
-        <div class="kpi-subtitle">Based on loss, latency &amp; availability</div>
+        <div class="kpi-subtitle">Availability + Loss + Latency</div>
       </div>
-      <div class="kpi-card" id="kpi-loss-latency">
-        <div class="kpi-label">Uplink loss p95 / Latency p95</div>
-        <div class="kpi-value" data-kpi="lossLatency">0.48% • 78 ms</div>
-        <div class="kpi-subtitle">Targets: loss ≤ 0.5% p95; latency ≤ 80 ms</div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header inline">
+        <div>
+          <h2>Regional scorecards</h2>
+          <p>Click a region to drill into sites, vendor performance and customers.</p>
+        </div>
+        <div class="pill" id="selectionPill">All regions • All vendors • All sites</div>
       </div>
-      <div class="kpi-card" id="kpi-goodput">
-        <div class="kpi-label">Downlink goodput p50</div>
-        <div class="kpi-value" data-kpi="goodput">182 Mbps</div>
-        <div class="kpi-subtitle">Mocked modem-level user throughput</div>
-      </div>
+      <div class="region-grid" id="regionCards"></div>
     </section>
 
     <section class="grid grid-2">
       <div class="panel">
         <div class="panel-header">
-          <h2>Customer SLA Scorecard (Mock)</h2>
-          <p>Static mock data – replace with real feed later.</p>
-        </div>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Customer</th>
-                <th>Region</th>
-                <th>Vertical</th>
-                <th>Avail %</th>
-                <th>Loss p95 %</th>
-                <th>Lat p95 ms</th>
-                <th>Down p50 Mbps</th>
-                <th>Usage TB</th>
-                <th>SLA</th>
-              </tr>
-            </thead>
-            <tbody id="customerTableBody">
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-header">
-          <h2>Transport Performance Trends (Mock)</h2>
-          <p>Availability, loss and latency over time.</p>
+          <h2>Availability, Loss &amp; Latency Trend</h2>
+          <p>Seven-day view for the selected region. Hover to read exact values.</p>
         </div>
         <canvas id="transportChart" height="260"></canvas>
       </div>
-    </section>
 
-    <section class="grid grid-2">
       <div class="panel">
         <div class="panel-header">
-          <h2>Top Consumers by Usage (Mock)</h2>
-          <p>30-day downstream usage in TB.</p>
+          <h2>Vendor compliance snapshot</h2>
+          <p>Cisco Meraki vs ERC Cradlepoint within the selected region.</p>
         </div>
-        <canvas id="topConsumersChart" height="260"></canvas>
+        <div class="vendor-chips" id="vendorChips"></div>
+        <div class="site-list">
+          <div class="site-header">
+            <span>Sites by vendor</span>
+            <span class="caption">Click a site to filter customers</span>
+          </div>
+          <div class="site-items" id="siteList"></div>
+        </div>
       </div>
+    </section>
 
-      <div class="panel dashed">
-        <div class="panel-header">
-          <h2>Radio Quality vs Goodput (Placeholder)</h2>
-          <p>In a real implementation, this would plot SINR / RSRP vs throughput.</p>
-        </div>
-        <div class="placeholder">
-          <p>This tile intentionally left as a placeholder. Use it later for cell-level radio / goodput scatter plot or Wi‑Fi journey metrics.</p>
-        </div>
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Customer SLA scorecard</h2>
+        <p>Availability, packet loss p95 and latency p95 are conditionally formatted for the active drill-down.</p>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Region</th>
+              <th>Site</th>
+              <th>Vendor</th>
+              <th>Avail %</th>
+              <th>Loss p95 %</th>
+              <th>Lat p95 ms</th>
+              <th>Usage TB</th>
+              <th>SLA</th>
+            </tr>
+          </thead>
+          <tbody id="customerTableBody"></tbody>
+        </table>
       </div>
     </section>
   </main>
