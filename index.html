@@ -10,9 +10,13 @@
 <body>
   <header class="topbar">
     <div class="topbar-left">
-      <p class="eyebrow">Executive view • Fixed Wireless</p>
-      <h1>B2B SLA Compliance Snapshot</h1>
-      <p class="subtitle">Availability, packet loss p95 and latency p95 – drilled from region to site, vendor, customer.</p>
+      <p class="eyebrow">Fixed Wireless Analytics</p>
+      <h1>B2B SLA &amp; Operations Dashboards</h1>
+      <p class="subtitle">Switch between the executive SLA snapshot and the Operations &amp; Engineering view.</p>
+      <div class="dashboard-switch" role="tablist" aria-label="Dashboard selector">
+        <button class="dashboard-tab active" data-dashboard="executive" role="tab" aria-selected="true">Executive SLA</button>
+        <button class="dashboard-tab" data-dashboard="operations" role="tab" aria-selected="false">Operations &amp; Engineering</button>
+      </div>
     </div>
     <div class="topbar-right">
       <div class="legend topbar-legend">
@@ -38,7 +42,7 @@
     </div>
   </header>
 
-  <main class="page">
+  <main class="page dashboard" id="executiveDashboard">
     <section class="kpi-row kpi-row-3">
       <div class="kpi-card" data-metric="availability">
         <div class="kpi-label">Availability (avg)</div>
@@ -120,6 +124,56 @@
           </thead>
           <tbody id="customerTableBody"></tbody>
         </table>
+      </div>
+    </section>
+  </main>
+
+  <main class="page dashboard hidden" id="operationsDashboard">
+    <section class="panel">
+      <div class="panel-header inline">
+        <div>
+          <h2>Transport trends &amp; incidents</h2>
+          <p>MW or failover windows shown as markers alongside packet loss %, latency p95 and goodput.</p>
+        </div>
+        <div class="pill">Dual-axis with incident callouts</div>
+      </div>
+      <canvas id="opsTransportChart" height="320"></canvas>
+    </section>
+
+    <section class="grid grid-2">
+      <div class="panel">
+        <div class="panel-header inline">
+          <div>
+            <h2>Radio quality vs downlink goodput</h2>
+            <p>SINR/RSRP scatter with trend line and quadrants to highlight good, average and poor zones.</p>
+          </div>
+          <div class="pill">Correlation view</div>
+        </div>
+        <div class="scatter-legend">
+          <span class="legend-swatch good"></span>Good SINR/RSRP
+          <span class="legend-swatch warn"></span>Marginal
+          <span class="legend-swatch bad"></span>Poor
+        </div>
+        <canvas id="radioQualityChart" height="300"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header inline">
+          <div>
+            <h2>Access utilization heatmap</h2>
+            <p>Channel utilization by AP and time to detect RF contention. Sorted by busiest APs.</p>
+          </div>
+          <div class="pill">Config change annotations</div>
+        </div>
+        <div class="heatmap-controls">
+          <label>
+            Annotate change
+            <input type="text" id="heatmapNote" placeholder="e.g. Rebalanced 5 GHz channels" />
+          </label>
+          <button id="applyHeatmapNote" class="chip accent">Apply note</button>
+          <span class="heatmap-note-status" id="heatmapNoteStatus">No recent annotations.</span>
+        </div>
+        <div class="heatmap" id="accessHeatmap" aria-label="Access utilization heatmap"></div>
       </div>
     </section>
   </main>
