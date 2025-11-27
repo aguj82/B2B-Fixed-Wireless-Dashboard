@@ -573,3 +573,381 @@ function initDashboard() {
 }
 
 document.addEventListener("DOMContentLoaded", initDashboard);
+
+// Operations & Engineering dashboard
+const DASHBOARD_IDS = {
+  executive: "executiveDashboard",
+  operations: "operationsDashboard",
+};
+
+let dashboardTabsInitialized = false;
+let operationsInitialized = false;
+let opsTransportChart;
+let radioQualityChart;
+
+function switchDashboard(target) {
+  Object.entries(DASHBOARD_IDS).forEach(([key, id]) => {
+    const isActive = key === target;
+    const main = document.getElementById(id);
+    if (main) {
+      main.classList.toggle("hidden", !isActive);
+    }
+    const tab = document.querySelector(`.dashboard-tab[data-dashboard="${key}"]`);
+    if (tab) {
+      tab.classList.toggle("active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+    }
+  });
+
+  if (target === "operations" && !operationsInitialized) {
+    initOperationsDashboard();
+    operationsInitialized = true;
+  }
+}
+
+function initDashboardTabs() {
+  if (dashboardTabsInitialized) return;
+  dashboardTabsInitialized = true;
+  const tabs = document.querySelectorAll(".dashboard-tab");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.dashboard;
+      switchDashboard(target);
+    });
+  });
+}
+
+function generateOpsTransportSeries() {
+  const labels = Array.from({ length: 14 }, (_, idx) => `Day ${idx + 1}`);
+  const baseGoodput = 420;
+  const baseLatency = 65;
+  const baseLoss = 0.35;
+  const incidents = [
+    { index: 3, type: "MW maintenance", impact: "Brief loss spike" },
+    { index: 8, type: "Failover", impact: "Latency & goodput dip" },
+    { index: 12, type: "MW maintenance", impact: "Loss window" },
+  ];
+
+  const data = labels.map((label, idx) => {
+    const multiplier = Math.sin(idx * 0.55);
+    let goodput = baseGoodput + multiplier * 60;
+    let latency = baseLatency + multiplier * 10;
+    let loss = baseLoss + Math.cos(idx * 0.45) * 0.08;
+
+    const incident = incidents.find((i) => i.index === idx);
+    if (incident) {
+      goodput -= 110;
+      latency += 18;
+      loss += 0.4;
+    }
+
+    return {
+      label,
+      goodput: Math.max(220, goodput),
+      latencyP95: Math.min(120, latency),
+      lossP95: Math.max(0.15, Math.min(2, loss)),
+    };
+  });
+
+  return { labels, data, incidents };
+}
+
+function buildOpsTransportChart() {
+  const ctx = document.getElementById("opsTransportChart");
+  if (!ctx) return;
+  const { labels, data, incidents } = generateOpsTransportSeries();
+
+  if (opsTransportChart) opsTransportChart.destroy();
+
+  opsTransportChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Goodput (Mbps)",
+          data: data.map((p) => p.goodput),
+          borderColor: "#22c55e",
+          backgroundColor: "rgba(34, 197, 94, 0.25)",
+          tension: 0.35,
+          fill: true,
+          yAxisID: "yGoodput",
+        },
+        {
+          label: "Packet Loss p95 %",
+          data: data.map((p) => p.lossP95),
+          borderColor: "#f97316",
+          pointRadius: 3,
+          tension: 0.3,
+          yAxisID: "yLoss",
+        },
+        {
+          label: "Latency p95 (ms)",
+          data: data.map((p) => p.latencyP95),
+          borderColor: "#38bdf8",
+          pointRadius: 3,
+          tension: 0.3,
+          yAxisID: "yLatency",
+        },
+        {
+          type: "scatter",
+          label: "MW / Failover windows",
+          data: incidents.map((incident) => ({
+            x: labels[incident.index],
+            y: data[incident.index].lossP95 + 0.1,
+            description: `${incident.type} – ${incident.impact}`,
+          })),
+          borderColor: "#facc15",
+          backgroundColor: "#facc15",
+          pointStyle: "triangle",
+          pointRadius: 7,
+          yAxisID: "yLoss",
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              if (context.dataset.type === "scatter") {
+                const { description } = context.raw;
+                return description;
+              }
+              return `${context.dataset.label}: ${context.formattedValue}`;
+            },
+          },
+        },
+        legend: {
+          labels: { color: "#cbd5f5", font: { size: 11 } },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: "#cbd5f5" },
+          grid: { color: "#1e293b" },
+        },
+        yGoodput: {
+          type: "linear",
+          position: "left",
+          ticks: { color: "#22c55e", callback: (v) => `${v} Mbps` },
+          grid: { color: "#1e293b" },
+          min: 200,
+          max: 520,
+        },
+        yLoss: {
+          type: "linear",
+          position: "right",
+          ticks: { color: "#f97316", callback: (v) => `${v.toFixed(2)}%` },
+          grid: { display: false },
+          min: 0,
+          max: 2,
+        },
+        yLatency: {
+          type: "linear",
+          position: "right",
+          ticks: { color: "#38bdf8", callback: (v) => `${v} ms` },
+          grid: { display: false },
+          min: 40,
+          max: 130,
+        },
+      },
+    },
+  });
+}
+
+function buildRadioQualityChart() {
+  const ctx = document.getElementById("radioQualityChart");
+  if (!ctx) return;
+  const samples = Array.from({ length: 40 }, (_, idx) => {
+    const sinr = 5 + Math.random() * 30;
+    const rsrp = -115 + Math.random() * 25;
+    const noise = Math.random() * 6;
+    const goodput = Math.max(40, sinr * 5 + rsrp * -0.5 + 300 - noise * 10);
+    return { x: sinr, y: goodput / 10, rsrp };
+  });
+
+  const regression = linearRegression(samples.map((s) => [s.x, s.y]));
+  const minX = Math.min(...samples.map((s) => s.x));
+  const maxX = Math.max(...samples.map((s) => s.x));
+  const trendLine = [
+    { x: minX, y: regression.predict(minX) },
+    { x: maxX, y: regression.predict(maxX) },
+  ];
+
+  const quadrantPlugin = {
+    id: "quadrantBackground",
+    beforeDraw(chart) {
+      const { ctx, chartArea } = chart;
+      if (!chartArea) return;
+      const xMid = chart.scales.x.getPixelForValue(18);
+      const yMid = chart.scales.y.getPixelForValue(28);
+      ctx.save();
+      ctx.fillStyle = "rgba(34, 197, 94, 0.08)";
+      ctx.fillRect(xMid, chartArea.top, chartArea.right - xMid, yMid - chartArea.top);
+      ctx.fillStyle = "rgba(245, 158, 11, 0.08)";
+      ctx.fillRect(chartArea.left, chartArea.top, xMid - chartArea.left, yMid - chartArea.top);
+      ctx.fillRect(xMid, yMid, chartArea.right - xMid, chartArea.bottom - yMid);
+      ctx.fillStyle = "rgba(248, 113, 113, 0.08)";
+      ctx.fillRect(chartArea.left, yMid, xMid - chartArea.left, chartArea.bottom - yMid);
+      ctx.restore();
+    },
+  };
+
+  if (radioQualityChart) radioQualityChart.destroy();
+
+  radioQualityChart = new Chart(ctx, {
+    type: "scatter",
+    data: {
+      datasets: [
+        {
+          label: "Radio samples (SINR vs Goodput)",
+          data: samples,
+          backgroundColor: samples.map((s) => {
+            if (s.x >= 18 && s.rsrp >= -100) return "rgba(34, 197, 94, 0.7)";
+            if (s.x >= 12 && s.rsrp >= -108) return "rgba(245, 158, 11, 0.8)";
+            return "rgba(248, 113, 113, 0.8)";
+          }),
+          borderWidth: 0,
+          pointRadius: 5,
+        },
+        {
+          type: "line",
+          label: "Trend line",
+          data: trendLine,
+          borderColor: "#a855f7",
+          borderDash: [6, 6],
+          pointRadius: 0,
+          tension: 0,
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: { labels: { color: "#cbd5f5", font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.datasetIndex === 1) return "Trend";
+              const sample = ctx.raw;
+              return `SINR ${sample.x.toFixed(1)} dB, Goodput ${(sample.y * 10).toFixed(0)} Mbps, RSRP ${sample.rsrp.toFixed(0)} dBm`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          title: { display: true, text: "SINR (dB)", color: "#cbd5f5" },
+          min: 4,
+          max: 36,
+          grid: { color: "#1e293b" },
+          ticks: { color: "#cbd5f5" },
+        },
+        y: {
+          title: { display: true, text: "Downlink goodput (Mbps)", color: "#cbd5f5" },
+          min: 20,
+          max: 70,
+          grid: { color: "#1e293b" },
+          ticks: { color: "#cbd5f5" },
+        },
+      },
+      maintainAspectRatio: false,
+    },
+    plugins: [quadrantPlugin],
+  });
+}
+
+function linearRegression(points) {
+  const n = points.length;
+  const sum = points.reduce(
+    (acc, [x, y]) => {
+      acc.x += x;
+      acc.y += y;
+      acc.xy += x * y;
+      acc.xx += x * x;
+      return acc;
+    },
+    { x: 0, y: 0, xy: 0, xx: 0 }
+  );
+
+  const slope = (n * sum.xy - sum.x * sum.y) / (n * sum.xx - sum.x ** 2 || 1);
+  const intercept = sum.y / n - (slope * sum.x) / n;
+
+  return {
+    slope,
+    intercept,
+    predict(x) {
+      return slope * x + intercept;
+    },
+  };
+}
+
+const heatmapData = [
+  { ap: "AP-12 (HQ)", values: [82, 77, 69, 58, 62, 71, 80, 88, 91, 86, 72, 65] },
+  { ap: "AP-07 (Branch)", values: [64, 61, 58, 55, 54, 63, 72, 78, 82, 80, 74, 69] },
+  { ap: "AP-19 (Warehouse)", values: [58, 54, 50, 47, 52, 64, 76, 85, 89, 83, 70, 62] },
+  { ap: "AP-03 (Retail)", values: [45, 42, 41, 39, 46, 58, 69, 75, 79, 71, 59, 52] },
+  { ap: "AP-25 (DC)", values: [71, 66, 61, 55, 57, 68, 79, 86, 90, 88, 77, 69] },
+];
+
+function renderHeatmap() {
+  const container = document.getElementById("accessHeatmap");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const sorted = [...heatmapData].sort(
+    (a, b) => Math.max(...b.values) - Math.max(...a.values)
+  );
+
+  sorted.forEach((row) => {
+    const rowEl = document.createElement("div");
+    rowEl.className = "heatmap-row";
+    const label = document.createElement("div");
+    label.className = "heatmap-label";
+    label.textContent = row.ap;
+    rowEl.appendChild(label);
+
+    const cellsWrapper = document.createElement("div");
+    cellsWrapper.className = "heatmap-cells";
+
+    row.values.forEach((val, idx) => {
+      const cell = document.createElement("div");
+      cell.className = "heatmap-cell";
+      cell.dataset.hour = idx + 7;
+      const intensity = Math.min(1, val / 100);
+      const hue = 120 - intensity * 120;
+      cell.style.background = `linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)), hsl(${hue}, 70%, ${30 + intensity * 25}%)`;
+      cell.innerHTML = `<span>${val}%</span><small>${idx + 7}:00</small>`;
+      cell.title = `${row.ap} • ${idx + 7}:00 • ${val}% utilization`;
+      cellsWrapper.appendChild(cell);
+    });
+
+    rowEl.appendChild(cellsWrapper);
+    container.appendChild(rowEl);
+  });
+}
+
+function initHeatmapAnnotations() {
+  const input = document.getElementById("heatmapNote");
+  const button = document.getElementById("applyHeatmapNote");
+  const status = document.getElementById("heatmapNoteStatus");
+  if (!input || !button || !status) return;
+
+  button.addEventListener("click", () => {
+    const note = input.value.trim();
+    status.textContent = note ? `Annotation applied: ${note}` : "No recent annotations.";
+    if (note) input.value = "";
+  });
+}
+
+function initOperationsDashboard() {
+  buildOpsTransportChart();
+  buildRadioQualityChart();
+  renderHeatmap();
+  initHeatmapAnnotations();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initDashboardTabs();
+  switchDashboard("executive");
+});
