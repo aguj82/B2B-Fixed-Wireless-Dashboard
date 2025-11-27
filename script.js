@@ -406,6 +406,22 @@ function transportSeriesForRange(rangeKey, region) {
   };
 }
 
+function updateTransportScaleVisibility(chart) {
+  const axesVisibility = { y: false, yLoss: false, yLatency: false };
+
+  chart.data.datasets.forEach((dataset, index) => {
+    if (chart.isDatasetVisible(index)) {
+      axesVisibility[dataset.yAxisID] = true;
+    }
+  });
+
+  Object.entries(axesVisibility).forEach(([axisId, visible]) => {
+    if (chart.options.scales[axisId]) {
+      chart.options.scales[axisId].display = visible;
+    }
+  });
+}
+
 function buildTransportChart(region, rangeKey) {
   const ctx = document.getElementById("transportChart").getContext("2d");
   const { labels, availabilitySeries, lossSeries, latencySeries } = transportSeriesForRange(rangeKey, region);
@@ -443,6 +459,12 @@ function buildTransportChart(region, rangeKey) {
     options: {
       plugins: {
         legend: {
+          onClick: (event, legendItem, legend) => {
+            const chart = legend.chart;
+            chart.toggleDataVisibility(legendItem.datasetIndex);
+            updateTransportScaleVisibility(chart);
+            chart.update();
+          },
           labels: {
             color: "#cbd5f5",
             font: { size: 10 },
@@ -492,6 +514,8 @@ function buildTransportChart(region, rangeKey) {
       },
     },
   });
+
+  updateTransportScaleVisibility(transportChart);
 }
 
 function updateSelectionPill(region, vendor, site) {
