@@ -520,9 +520,8 @@ function initTimeRangeControl(currentRange, onRangeChange) {
 
   button.addEventListener("click", (event) => {
     event.stopPropagation();
-    const willOpen = !control.classList.contains("open");
-    control.classList.toggle("open", willOpen);
-    button.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    control.classList.add("open");
+    button.setAttribute("aria-expanded", "true");
   });
 
   options.forEach((opt) => {
@@ -533,12 +532,6 @@ function initTimeRangeControl(currentRange, onRangeChange) {
       onRangeChange(rangeKey);
       closeMenu();
     });
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!control.contains(event.target)) {
-      closeMenu();
-    }
   });
 
   setActiveRange(currentRange);
