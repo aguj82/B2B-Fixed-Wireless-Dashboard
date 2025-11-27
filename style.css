@@ -76,6 +76,69 @@ body {
   background: rgba(255, 255, 255, 0.03);
 }
 
+.time-chip {
+  position: relative;
+  padding: 0;
+  overflow: visible;
+}
+
+.time-chip-button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0.35rem 0.65rem;
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.time-chip-button::after {
+  content: "▾";
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.time-chip-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  padding: 0.35rem;
+  min-width: 210px;
+  display: none;
+  flex-direction: column;
+  gap: 0.25rem;
+  z-index: 10;
+}
+
+.time-chip-menu button {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.time-chip-menu button:hover,
+.time-chip-menu button.active {
+  background: rgba(124, 58, 237, 0.12);
+  color: #d8b4fe;
+}
+
+.time-chip.open .time-chip-menu {
+  display: flex;
+}
+
 .chip.accent {
   border-color: rgba(124, 58, 237, 0.4);
   color: #d8b4fe;
