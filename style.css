@@ -503,7 +503,7 @@ td.bad { color: var(--bad); }
   color: var(--text-muted);
 }
 
-.legend-swatch {
+.legend-swatch {  
   width: 12px;
   height: 12px;
   border-radius: 4px;
@@ -513,6 +513,17 @@ td.bad { color: var(--bad); }
 .legend-swatch.good { background: rgba(34, 197, 94, 0.6); }
 .legend-swatch.warn { background: rgba(245, 158, 11, 0.6); }
 .legend-swatch.bad { background: rgba(248, 113, 113, 0.6); }
+
+.radio-quality-chart {
+  max-width: 600px;
+  margin: 0.5rem auto 0;
+}
+
+#radioQualityChart {
+  width: 600px;
+  height: 400px;
+  display: block;
+}
 
 .heatmap-controls {
   display: flex;

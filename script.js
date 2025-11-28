@@ -760,11 +760,11 @@ function buildRadioQualityChart() {
   const ctx = document.getElementById("radioQualityChart");
   if (!ctx) return;
   const samples = Array.from({ length: 40 }, (_, idx) => {
-    const sinr = 5 + Math.random() * 30;
+    const sinr = Math.random() * 30;
     const rsrp = -115 + Math.random() * 25;
     const noise = Math.random() * 6;
     const goodput = Math.max(40, sinr * 5 + rsrp * -0.5 + 300 - noise * 10);
-    return { x: sinr, y: goodput / 10, rsrp };
+    return { x: sinr, y: clamp(goodput / 10, 0, 100), rsrp };
   });
 
   const regression = linearRegression(samples.map((s) => [s.x, s.y]));
@@ -823,6 +823,7 @@ function buildRadioQualityChart() {
       ],
     },
     options: {
+      responsive: false,
       plugins: {
         legend: { labels: { color: "#cbd5f5", font: { size: 11 } } },
         tooltip: {
@@ -838,15 +839,15 @@ function buildRadioQualityChart() {
       scales: {
         x: {
           title: { display: true, text: "SINR (dB)", color: "#cbd5f5" },
-          min: 4,
-          max: 36,
+          min: 0,
+          max: 30,
           grid: { color: "#1e293b" },
           ticks: { color: "#cbd5f5" },
         },
         y: {
           title: { display: true, text: "Downlink goodput (Mbps)", color: "#cbd5f5" },
-          min: 20,
-          max: 70,
+          min: 0,
+          max: 100,
           grid: { color: "#1e293b" },
           ticks: { color: "#cbd5f5" },
         },
