@@ -759,11 +759,11 @@ function buildOpsTransportChart() {
 function buildRadioQualityChart() {
   const ctx = document.getElementById("radioQualityChart");
   if (!ctx) return;
-  const samples = Array.from({ length: 40 }, (_, idx) => {
-    const sinr = Math.random() * 30;
+  const samples = Array.from({ length: 40 }, () => {
+    const sinr = -150 + Math.random() * 60;
     const rsrp = -115 + Math.random() * 25;
     const noise = Math.random() * 6;
-    const goodput = Math.max(40, sinr * 5 + rsrp * -0.5 + 300 - noise * 10);
+    const goodput = Math.max(40, (sinr + 150) * 2 + rsrp * -0.4 + 300 - noise * 10);
     return { x: sinr, y: clamp(goodput / 10, 0, 100), rsrp };
   });
 
@@ -780,7 +780,7 @@ function buildRadioQualityChart() {
     beforeDraw(chart) {
       const { ctx, chartArea } = chart;
       if (!chartArea) return;
-      const xMid = chart.scales.x.getPixelForValue(18);
+      const xMid = chart.scales.x.getPixelForValue(-120);
       const yMid = chart.scales.y.getPixelForValue(28);
       ctx.save();
       ctx.fillStyle = "rgba(34, 197, 94, 0.08)";
@@ -804,8 +804,8 @@ function buildRadioQualityChart() {
           label: "Radio samples (SINR vs Goodput)",
           data: samples,
           backgroundColor: samples.map((s) => {
-            if (s.x >= 18 && s.rsrp >= -100) return "rgba(34, 197, 94, 0.7)";
-            if (s.x >= 12 && s.rsrp >= -108) return "rgba(245, 158, 11, 0.8)";
+            if (s.x >= -100 && s.rsrp >= -100) return "rgba(34, 197, 94, 0.7)";
+            if (s.x >= -120 && s.rsrp >= -108) return "rgba(245, 158, 11, 0.8)";
             return "rgba(248, 113, 113, 0.8)";
           }),
           borderWidth: 0,
@@ -839,8 +839,8 @@ function buildRadioQualityChart() {
       scales: {
         x: {
           title: { display: true, text: "SINR (dB)", color: "#cbd5f5" },
-          min: 0,
-          max: 30,
+          min: -150,
+          max: -90,
           grid: { color: "#1e293b" },
           ticks: { color: "#cbd5f5" },
         },
