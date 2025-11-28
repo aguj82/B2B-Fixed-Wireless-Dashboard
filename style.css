@@ -283,6 +283,10 @@ body {
   gap: 0.85rem;
 }
 
+.grid-stack {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .grid-2 {
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
 }

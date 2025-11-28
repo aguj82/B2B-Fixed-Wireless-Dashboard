@@ -140,23 +140,7 @@
       <canvas id="opsTransportChart" height="320"></canvas>
     </section>
 
-    <section class="grid grid-2">
-      <div class="panel">
-        <div class="panel-header inline">
-          <div>
-            <h2>Radio quality vs downlink goodput</h2>
-            <p>SINR/RSRP scatter with trend line and quadrants to highlight good, average and poor zones.</p>
-          </div>
-          <div class="pill">Correlation view</div>
-        </div>
-        <div class="scatter-legend">
-          <span class="legend-swatch good"></span>Good SINR/RSRP
-          <span class="legend-swatch warn"></span>Marginal
-          <span class="legend-swatch bad"></span>Poor
-        </div>
-        <canvas id="radioQualityChart" height="300"></canvas>
-      </div>
-
+    <section class="grid grid-stack">
       <div class="panel">
         <div class="panel-header inline">
           <div>
@@ -174,6 +158,22 @@
           <span class="heatmap-note-status" id="heatmapNoteStatus">No recent annotations.</span>
         </div>
         <div class="heatmap" id="accessHeatmap" aria-label="Access utilization heatmap"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header inline">
+          <div>
+            <h2>Radio quality vs downlink goodput</h2>
+            <p>SINR/RSRP scatter with trend line and quadrants to highlight good, average and poor zones.</p>
+          </div>
+          <div class="pill">Correlation view</div>
+        </div>
+        <div class="scatter-legend">
+          <span class="legend-swatch good"></span>Good SINR/RSRP
+          <span class="legend-swatch warn"></span>Marginal
+          <span class="legend-swatch bad"></span>Poor
+        </div>
+        <canvas id="radioQualityChart" height="300"></canvas>
       </div>
     </section>
   </main>
