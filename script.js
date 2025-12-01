@@ -373,10 +373,58 @@ function renderCustomerTable(region, vendor, site) {
 let transportChart;
 let topCustomersChart;
 
+const donutCenterLabelPlugin = {
+  id: "donutCenterLabel",
+  afterDraw(chart, args, options) {
+    if (!options?.value) return;
+    const meta = chart.getDatasetMeta(0);
+    const arc = meta?.data?.[0];
+    if (!arc) return;
+
+    const { x, y } = arc.getProps(["x", "y"], true);
+    const ctx = chart.ctx;
+    const valueSize = options.valueSize || 18;
+    const titleSize = options.titleSize || Math.round(valueSize * 0.65);
+    const fontFamily = 'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = options.color || "#e5e7eb";
+
+    if (options.title) {
+      ctx.font = `500 ${titleSize}px ${fontFamily}`;
+      ctx.fillText(options.title, x, y - valueSize * 0.4);
+    }
+
+    ctx.font = `700 ${valueSize}px ${fontFamily}`;
+    ctx.fillText(options.value, x, y + (options.title ? valueSize * 0.15 : 0));
+    ctx.restore();
+  },
+};
+
+function computeDonutSizing(container) {
+  const fallback = { outerRadius: 120, innerRadius: 88, valueSize: 19, titleSize: 12 };
+  if (!container) return fallback;
+
+  const { width, height } = container.getBoundingClientRect();
+  if (!width || !height) return fallback;
+
+  const padding = 24;
+  const constrained = Math.min(width, height);
+  const outerRadius = Math.max(40, Math.floor((constrained - padding * 2) / 2));
+  const innerRadius = Math.max(outerRadius - 32, 24);
+  const valueSize = Math.max(14, Math.floor(outerRadius * 0.16));
+  const titleSize = Math.max(10, Math.floor(valueSize * 0.65));
+
+  return { outerRadius, innerRadius, valueSize, titleSize };
+}
+
 function renderTopCustomersChart(region, vendor, site) {
   const canvas = document.getElementById("topCustomersChart");
   const legend = document.getElementById("topCustomersLegend");
-  if (!canvas || !legend) return;
+  const shell = document.getElementById("topCustomersChartShell");
+  if (!canvas || !legend || !shell) return;
 
   const filtered = selectionFilters(region, vendor, site)
     .map((customer) => ({ ...customer, usageGb: customer.usageTb * 1024 }))
@@ -396,6 +444,9 @@ function renderTopCustomersChart(region, vendor, site) {
 
   const palette = ["#7c3aed", "#22c55e", "#38bdf8", "#f59e0b", "#f97373", "#a855f7"];
   const ctx = canvas.getContext("2d");
+  const totalUsage = filtered.reduce((sum, item) => sum + item.usageGb, 0);
+  const sizing = computeDonutSizing(shell);
+  const centerLabel = `${Math.round(totalUsage).toLocaleString(undefined, { maximumFractionDigits: 0 })} GB`;
 
   if (topCustomersChart) topCustomersChart.destroy();
 
@@ -414,7 +465,10 @@ function renderTopCustomersChart(region, vendor, site) {
       ],
     },
     options: {
-      cutout: "58%",
+      responsive: true,
+      maintainAspectRatio: false,
+      radius: sizing.outerRadius,
+      cutout: sizing.innerRadius,
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -427,8 +481,26 @@ function renderTopCustomersChart(region, vendor, site) {
             },
           },
         },
+        donutCenterLabel: {
+          title: "Top 5 total",
+          value: centerLabel,
+          valueSize: sizing.valueSize,
+          titleSize: sizing.titleSize,
+          color: "#e5e7eb",
+        },
+      },
+      onResize: (chart) => {
+        const updatedSizing = computeDonutSizing(shell);
+        chart.options.radius = updatedSizing.outerRadius;
+        chart.options.cutout = updatedSizing.innerRadius;
+        chart.options.plugins.donutCenterLabel = {
+          ...chart.options.plugins.donutCenterLabel,
+          valueSize: updatedSizing.valueSize,
+          titleSize: updatedSizing.titleSize,
+        };
       },
     },
+    plugins: [donutCenterLabelPlugin],
   });
 
   filtered.forEach((customer, idx) => {
