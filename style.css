@@ -302,16 +302,44 @@ body {
   gap: 0.5rem;
 }
 
+.chart-card {
+  height: 18rem;
+}
+
+@media (max-width: 768px) {
+  .chart-card {
+    height: 14rem;
+  }
+}
+
 .donut-wrapper {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   gap: 1.1rem;
   flex-wrap: wrap;
+  flex: 1;
 }
 
-.donut-wrapper canvas {
-  max-width: 320px;
+.donut-chart-shell {
+  flex: 1;
+  min-width: 240px;
+  height: 100%;
+}
+
+.donut-chart-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-chart-area canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .donut-legend {
