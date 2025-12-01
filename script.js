@@ -371,6 +371,82 @@ function renderCustomerTable(region, vendor, site) {
 }
 
 let transportChart;
+let topCustomersChart;
+
+function renderTopCustomersChart(region, vendor, site) {
+  const canvas = document.getElementById("topCustomersChart");
+  const legend = document.getElementById("topCustomersLegend");
+  if (!canvas || !legend) return;
+
+  const filtered = selectionFilters(region, vendor, site)
+    .map((customer) => ({ ...customer, usageGb: customer.usageTb * 1024 }))
+    .sort((a, b) => b.usageGb - a.usageGb)
+    .slice(0, 5);
+
+  legend.innerHTML = "";
+
+  if (!filtered.length) {
+    legend.textContent = "No customers match the current filters.";
+    if (topCustomersChart) {
+      topCustomersChart.destroy();
+      topCustomersChart = null;
+    }
+    return;
+  }
+
+  const palette = ["#7c3aed", "#22c55e", "#38bdf8", "#f59e0b", "#f97373", "#a855f7"];
+  const ctx = canvas.getContext("2d");
+
+  if (topCustomersChart) topCustomersChart.destroy();
+
+  topCustomersChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: filtered.map((c) => c.name),
+      datasets: [
+        {
+          data: filtered.map((c) => c.usageGb),
+          backgroundColor: filtered.map((_, idx) => palette[idx % palette.length]),
+          borderColor: "#0f172a",
+          borderWidth: 1.5,
+          hoverOffset: 6,
+        },
+      ],
+    },
+    options: {
+      cutout: "58%",
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const value = context.parsed;
+              return `${context.label}: ${value.toLocaleString(undefined, {
+                maximumFractionDigits: 0,
+              })} GB`;
+            },
+          },
+        },
+      },
+    },
+  });
+
+  filtered.forEach((customer, idx) => {
+    const item = document.createElement("div");
+    item.className = "donut-legend-item";
+    const usageLabel = `${customer.usageGb.toLocaleString(undefined, {
+      maximumFractionDigits: 0,
+    })} GB`;
+    item.innerHTML = `
+      <span class="swatch" style="background:${palette[idx % palette.length]}"></span>
+      <div>
+        <p>${customer.name}</p>
+        <small>${usageLabel} • ${customer.site}</small>
+      </div>
+    `;
+    legend.appendChild(item);
+  });
+}
 
 function transportSeriesForRange(rangeKey, region) {
   const series = transportTimeSeries[rangeKey];
@@ -561,6 +637,7 @@ function initDashboard() {
       selectedSite = site;
       refresh();
     });
+    renderTopCustomersChart(selectedRegion, selectedVendor, selectedSite);
     updateSelectionPill(selectedRegion, selectedVendor, selectedSite);
   }
 
