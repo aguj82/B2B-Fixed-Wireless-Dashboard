@@ -304,14 +304,25 @@ body {
 
 .donut-wrapper {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1.1rem;
   flex-wrap: wrap;
 }
 
+.donut-chart {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .donut-wrapper canvas {
-  max-width: 320px;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
 }
 
 .donut-legend {

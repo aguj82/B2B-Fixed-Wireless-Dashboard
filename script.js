@@ -378,6 +378,10 @@ function renderTopCustomersChart(region, vendor, site) {
   const legend = document.getElementById("topCustomersLegend");
   if (!canvas || !legend) return;
 
+  const donutSize = 320;
+  canvas.width = donutSize;
+  canvas.height = donutSize;
+
   const filtered = selectionFilters(region, vendor, site)
     .map((customer) => ({ ...customer, usageGb: customer.usageTb * 1024 }))
     .sort((a, b) => b.usageGb - a.usageGb)
@@ -414,6 +418,8 @@ function renderTopCustomersChart(region, vendor, site) {
       ],
     },
     options: {
+      responsive: false,
+      maintainAspectRatio: false,
       cutout: "58%",
       plugins: {
         legend: { display: false },
