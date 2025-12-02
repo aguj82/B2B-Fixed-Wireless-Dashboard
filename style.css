@@ -92,14 +92,16 @@ body {
 }
 
 .topbar-logo {
-  height: 36px;
+  height: 42px;
   width: auto;
   display: block;
-  padding: 6px 8px;
+  padding: 6px 10px;
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  object-fit: contain;
   flex-shrink: 0;
 }
 
