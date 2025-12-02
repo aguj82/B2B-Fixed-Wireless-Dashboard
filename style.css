@@ -768,7 +768,7 @@ td.bad { color: var(--bad); }
 #carrierChart,
 #customerParetoChart {
   width: 100% !important;
-  height: 320px !important;
+  height: 384px !important;
   display: block;
   max-width: none;
 }
