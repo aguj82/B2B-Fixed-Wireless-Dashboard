@@ -1644,7 +1644,7 @@ function buildRadioQualityChart() {
       ],
     },
     options: {
-      responsive: false,
+      responsive: true,
       plugins: {
         legend: { labels: { color: "#cbd5f5", font: { size: 11 } } },
         tooltip: {
