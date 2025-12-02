@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="150" height="36" viewBox="0 0 150 36" role="img" aria-labelledby="title desc">
   <title id="title">Realize logo</title>
   <desc id="desc">Wordmark for Realize with magenta accent</desc>
-  <rect width="150" height="36" fill="transparent" />
+  <rect width="150" height="36" fill="#ffffff" />
   <g font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="28" fill="#130e0f" letter-spacing="0">
     <text x="0" y="25">re</text>
     <text x="55" y="25">lize</text>
