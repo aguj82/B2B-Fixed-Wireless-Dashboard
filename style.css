@@ -765,10 +765,16 @@ td.bad { color: var(--bad); }
   display: block;
 }
 
-#carrierChart,
-#customerParetoChart {
+#carrierChart {
   width: 100% !important;
   height: 384px !important;
+  display: block;
+  max-width: none;
+}
+
+#customerParetoChart {
+  width: 100% !important;
+  height: 500px !important;
   display: block;
   max-width: none;
 }
