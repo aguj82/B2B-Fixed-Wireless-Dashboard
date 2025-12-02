@@ -437,50 +437,58 @@ function renderSiteList(region, vendor, technology, selectedSite, onClick) {
   });
 }
 
-function renderAccessDrilldowns(region, vendor, site, selectedTech, onSelectTech) {
-  const container = document.getElementById("accessDrilldowns");
-  if (!container) return;
-  container.innerHTML = "";
+function formatMetricValue(metricKey, value) {
+  if (metricKey === "latencyP95") return `${value.toFixed(0)} ms`;
+  const decimals = metricKey === "slaWithin" ? 0 : 2;
+  return `${value.toFixed(decimals)}%`;
+}
 
+function statusForMetricKey(metricKey, value) {
+  if (metricKey === "slaWithin") {
+    return value >= 90 ? "good" : value >= 80 ? "warn" : "bad";
+  }
+  if (metricKey === "availability") return metricStatus(value, "availability");
+  if (metricKey === "lossP95") return metricStatus(value, "loss");
+  if (metricKey === "latencyP95") return metricStatus(value, "latency");
+  return "good";
+}
+
+function renderKpiDrilldowns(region, vendor, site, selectedTech, onSelectTech) {
   const techs = [
     { id: "4g", label: TECH_LABELS["4g"] },
     { id: "5g", label: TECH_LABELS["5g"] },
   ];
 
-  const metrics = [
-    { key: "availability", label: "Availability" },
-    { key: "lossP95", label: "Packet loss p95" },
-    { key: "latencyP95", label: "Latency p95" },
+  const metricTargets = [
+    { key: "availability" },
+    { key: "lossP95" },
+    { key: "latencyP95" },
+    { key: "slaWithin" },
   ];
 
-  metrics.forEach((metric) => {
-    const card = document.createElement("div");
-    card.className = "drilldown-card";
-    card.innerHTML = `<div class="drilldown-title">${metric.label}</div>`;
+  metricTargets.forEach((metric) => {
+    const container = document.querySelector(`.kpi-drilldowns[data-drilldown-for="${metric.key}"]`);
+    if (!container) return;
+    container.innerHTML = "";
 
-    const rows = document.createElement("div");
-    rows.className = "drilldown-rows";
+    const header = document.createElement("div");
+    header.className = "kpi-drilldown-title";
+    header.textContent = "Access drill-down";
+    container.appendChild(header);
 
     techs.forEach((tech) => {
       const summary = averageMetrics(selectionFilters(region, vendor, site, tech.id));
       const value = summary[metric.key];
-      const formatted =
-        metric.key === "availability"
-          ? `${value.toFixed(2)}%`
-          : metric.key === "lossP95"
-          ? `${value.toFixed(2)}%`
-          : `${value.toFixed(0)} ms`;
-      const statusKey = metric.key === "availability" ? "availability" : metric.key === "lossP95" ? "loss" : "latency";
-      const status = metricStatus(value, statusKey);
+      const status = statusForMetricKey(metric.key, value);
       const row = document.createElement("div");
-      row.className = `drilldown-row ${selectedTech === tech.id ? "active" : ""}`;
-      row.innerHTML = `<span>${tech.label}</span><strong class="${status}">${formatted}</strong>`;
+      row.className = `kpi-drilldown-row ${selectedTech === tech.id ? "active" : ""}`;
+      row.innerHTML = `
+        <span class="tech-label">${tech.label}</span>
+        <span class="metric-value ${status}">${formatMetricValue(metric.key, value)}</span>
+      `;
       row.addEventListener("click", () => onSelectTech(tech.id));
-      rows.appendChild(row);
+      container.appendChild(row);
     });
-
-    card.appendChild(rows);
-    container.appendChild(card);
   });
 }
 
@@ -791,7 +799,7 @@ function initDashboard() {
       selectedSite = site;
       refresh();
     });
-    renderAccessDrilldowns(selectedRegion, selectedVendor, selectedSite, selectedTech, (tech) => {
+    renderKpiDrilldowns(selectedRegion, selectedVendor, selectedSite, selectedTech, (tech) => {
       selectedTech = tech;
       selectedSite = "all";
       refresh();

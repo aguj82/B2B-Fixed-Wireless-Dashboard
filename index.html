@@ -67,33 +67,26 @@
         <div class="kpi-label">Availability (avg)</div>
         <div class="kpi-value" data-kpi="availability">99.4%</div>
         <div class="kpi-subtitle">Target ≥ 99.5%</div>
+        <div class="kpi-drilldowns" data-drilldown-for="availability"></div>
       </div>
       <div class="kpi-card" data-metric="loss">
         <div class="kpi-label">Packet Loss p95</div>
         <div class="kpi-value" data-kpi="lossP95">0.48%</div>
         <div class="kpi-subtitle">Target ≤ 0.50%</div>
+        <div class="kpi-drilldowns" data-drilldown-for="lossP95"></div>
       </div>
       <div class="kpi-card" data-metric="latency">
         <div class="kpi-label">Latency p95</div>
         <div class="kpi-value" data-kpi="latencyP95">78 ms</div>
         <div class="kpi-subtitle">Target ≤ 80 ms</div>
+        <div class="kpi-drilldowns" data-drilldown-for="latencyP95"></div>
       </div>
       <div class="kpi-card" data-metric="slaWithin">
         <div class="kpi-label">Customers within SLA</div>
         <div class="kpi-value" data-kpi="slaWithin">88%</div>
         <div class="kpi-subtitle">Availability + Loss + Latency</div>
+        <div class="kpi-drilldowns" data-drilldown-for="slaWithin"></div>
       </div>
-    </section>
-
-    <section class="panel">
-      <div class="panel-header inline">
-        <div>
-          <h2>Access KPI drill-downs</h2>
-          <p>Compare 4G vs 5G availability, latency and packet loss for the active filters.</p>
-        </div>
-        <div class="pill">Click a row to focus a technology</div>
-      </div>
-      <div class="drilldown-grid" id="accessDrilldowns"></div>
     </section>
 
     <section class="panel">

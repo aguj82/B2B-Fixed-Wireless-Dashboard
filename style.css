@@ -287,6 +287,52 @@ body {
   color: var(--text-muted);
 }
 
+.kpi-drilldowns {
+  margin-top: 0.45rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.kpi-drilldown-title {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.kpi-drilldown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.45rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kpi-drilldown-row:hover {
+  border-color: rgba(124, 58, 237, 0.45);
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.kpi-drilldown-row.active {
+  border-color: rgba(124, 58, 237, 0.7);
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.3);
+}
+
+.kpi-drilldown-row .tech-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.kpi-drilldown-row .metric-value {
+  font-weight: 600;
+}
+
 .kpi-card::after {
   content: "";
   position: absolute;
