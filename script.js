@@ -10,7 +10,8 @@ const customers = [
     name: "Acme Logistics",
     region: "west",
     site: "Seattle Hub",
-    vendor: "meraki",
+    vendor: "cisco",
+    technology: "5g",
     availability: 99.72,
     lossP95: 0.32,
     latencyP95: 68,
@@ -20,7 +21,8 @@ const customers = [
     name: "Bright Retail Group",
     region: "west",
     site: "Portland Edge",
-    vendor: "cradlepoint",
+    vendor: "ericsson",
+    technology: "4g",
     availability: 99.18,
     lossP95: 0.7,
     latencyP95: 82,
@@ -30,7 +32,8 @@ const customers = [
     name: "CityCare Clinics",
     region: "central",
     site: "Denver Core",
-    vendor: "meraki",
+    vendor: "cisco",
+    technology: "5g",
     availability: 99.88,
     lossP95: 0.18,
     latencyP95: 54,
@@ -40,7 +43,8 @@ const customers = [
     name: "NorthSteel Manufacturing",
     region: "central",
     site: "Kansas City",
-    vendor: "cradlepoint",
+    vendor: "ericsson",
+    technology: "4g",
     availability: 98.94,
     lossP95: 1.1,
     latencyP95: 95,
@@ -50,7 +54,8 @@ const customers = [
     name: "OmniBank Branch Network",
     region: "east",
     site: "Philadelphia",
-    vendor: "meraki",
+    vendor: "cisco",
+    technology: "4g",
     availability: 99.63,
     lossP95: 0.42,
     latencyP95: 72,
@@ -60,7 +65,8 @@ const customers = [
     name: "MetroPublic Services",
     region: "east",
     site: "Richmond",
-    vendor: "cradlepoint",
+    vendor: "ericsson",
+    technology: "4g",
     availability: 98.61,
     lossP95: 1.4,
     latencyP95: 108,
@@ -70,7 +76,8 @@ const customers = [
     name: "Horizon Media Offices",
     region: "west",
     site: "San Jose",
-    vendor: "meraki",
+    vendor: "cisco",
+    technology: "4g",
     availability: 99.4,
     lossP95: 0.55,
     latencyP95: 75,
@@ -80,11 +87,23 @@ const customers = [
     name: "EduConnect Campuses",
     region: "east",
     site: "Boston",
-    vendor: "meraki",
+    vendor: "cisco",
+    technology: "5g",
     availability: 99.27,
     lossP95: 0.5,
     latencyP95: 78,
     usageTb: 46.3,
+  },
+  {
+    name: "UrbanGrid Utilities",
+    region: "central",
+    site: "St. Louis",
+    vendor: "ericsson",
+    technology: "5g",
+    availability: 99.4,
+    lossP95: 0.4,
+    latencyP95: 70,
+    usageTb: 34.2,
   },
 ];
 
@@ -92,6 +111,23 @@ const REGION_BASELINES = {
   west: { availability: 99.45, lossP95: 0.46, latencyP95: 72 },
   central: { availability: 99.05, lossP95: 0.7, latencyP95: 86 },
   east: { availability: 99.2, lossP95: 0.55, latencyP95: 76 },
+};
+
+const TECH_LABELS = {
+  all: "All access",
+  "4g": "4G/LTE",
+  "5g": "5G",
+};
+
+const VENDOR_LABELS = {
+  cisco: "Cisco",
+  ericsson: "Ericsson",
+};
+
+const TECH_ADJUSTMENTS = {
+  all: { availability: 0, lossP95: 0, latencyP95: 0 },
+  "4g": { availability: -0.12, lossP95: 0.08, latencyP95: 7 },
+  "5g": { availability: 0.12, lossP95: -0.07, latencyP95: -9 },
 };
 
 const TIME_RANGE_CONFIG = {
@@ -124,12 +160,15 @@ const TIME_RANGE_LABELS = {
   monthly: "Last 30 days",
 };
 
+const transportTimeSeriesCache = {};
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function buildTimeRangeSeries(rangeKey) {
+function buildTimeRangeSeries(rangeKey, technologyKey = "all") {
   const config = TIME_RANGE_CONFIG[rangeKey];
+  const adjustments = TECH_ADJUSTMENTS[technologyKey] || TECH_ADJUSTMENTS.all;
   const labels = Array.from({ length: config.points }, (_, idx) => {
     const offset = config.points - idx - 1;
     return config.labelFormatter(offset);
@@ -141,17 +180,17 @@ function buildTimeRangeSeries(rangeKey) {
     byRegion[region] = labels.map((label, idx) => {
       const multiplier = Math.sin((idx + seed) * 0.55);
       const availability = clamp(
-        base.availability + multiplier * config.variance.availability,
+        base.availability + adjustments.availability + multiplier * config.variance.availability,
         98.6,
         99.9
       );
       const lossP95 = clamp(
-        base.lossP95 + multiplier * config.variance.lossP95,
+        base.lossP95 + adjustments.lossP95 + multiplier * config.variance.lossP95,
         0.15,
         1.6
       );
       const latencyP95 = clamp(
-        base.latencyP95 + multiplier * config.variance.latencyP95,
+        base.latencyP95 + adjustments.latencyP95 + multiplier * config.variance.latencyP95,
         60,
         115
       );
@@ -162,12 +201,13 @@ function buildTimeRangeSeries(rangeKey) {
   return { labels, byRegion };
 }
 
-const transportTimeSeries = {
-  hourly: buildTimeRangeSeries("hourly"),
-  daily: buildTimeRangeSeries("daily"),
-  weekly: buildTimeRangeSeries("weekly"),
-  monthly: buildTimeRangeSeries("monthly"),
-};
+function getTransportSeries(rangeKey, technologyKey) {
+  const cacheKey = `${rangeKey}-${technologyKey}`;
+  if (!transportTimeSeriesCache[cacheKey]) {
+    transportTimeSeriesCache[cacheKey] = buildTimeRangeSeries(rangeKey, technologyKey);
+  }
+  return transportTimeSeriesCache[cacheKey];
+}
 
 function metricStatus(value, metric) {
   if (metric === "availability") {
@@ -220,17 +260,18 @@ function averageMetrics(list) {
   return { availability, lossP95, latencyP95, slaWithin };
 }
 
-function selectionFilters(region, vendor, site) {
+function selectionFilters(region, vendor, site, technology = "all") {
   return customers.filter(
     (c) =>
       (region === "all" || c.region === region) &&
       (vendor === "all" || c.vendor === vendor) &&
-      (site === "all" || c.site === site)
+      (site === "all" || c.site === site) &&
+      (technology === "all" || c.technology === technology)
   );
 }
 
-function updateKpiCards(region, vendor, site) {
-  const filtered = selectionFilters(region, vendor, site);
+function updateKpiCards(region, vendor, site, technology) {
+  const filtered = selectionFilters(region, vendor, site, technology);
   const kpis = averageMetrics(filtered);
 
   const availabilityEl = document.querySelector('[data-kpi="availability"]');
@@ -258,10 +299,10 @@ function updateKpiCards(region, vendor, site) {
   slaCard.className = `kpi-card ${slaStatusClass}`;
 }
 
-function summarizeRegions() {
+function summarizeRegions(vendor = "all", technology = "all") {
   const regionIds = [...new Set(customers.map((c) => c.region))];
   return regionIds.map((id) => {
-    const regionCustomers = customers.filter((c) => c.region === id);
+    const regionCustomers = selectionFilters(id, vendor, "all", technology);
     const summary = averageMetrics(regionCustomers);
     return {
       id,
@@ -278,10 +319,10 @@ function regionStatusText(summary) {
   return "Out of SLA";
 }
 
-function renderRegionCards(selectedRegion, onClick) {
+function renderRegionCards(selectedRegion, vendor, technology, onClick) {
   const container = document.getElementById("regionCards");
   container.innerHTML = "";
-  const regions = summarizeRegions();
+  const regions = summarizeRegions(vendor, technology);
 
   regions.forEach((region) => {
     const card = document.createElement("div");
@@ -302,13 +343,42 @@ function renderRegionCards(selectedRegion, onClick) {
   });
 }
 
+function renderVendorScorecards(region, technology, site, selectedVendor, onClick) {
+  const container = document.getElementById("vendorScorecards");
+  if (!container) return;
+  container.innerHTML = "";
+  const vendors = [
+    { id: "cisco", label: VENDOR_LABELS.cisco },
+    { id: "ericsson", label: VENDOR_LABELS.ericsson },
+  ];
+
+  vendors.forEach((vendor) => {
+    const scoped = selectionFilters(region, vendor.id, site, technology);
+    const summary = averageMetrics(scoped);
+    const status = slaStatus(summary);
+    const card = document.createElement("div");
+    card.className = `vendor-card ${selectedVendor === vendor.id ? "active" : ""}`;
+    card.innerHTML = `
+      <div class="title-row">
+        <h4>${vendor.label} scorecard</h4>
+        <span class="status-pill ${status}">${regionStatusText(summary)}</span>
+      </div>
+      <div class="metric-line"><span>Availability</span><strong>${summary.availability.toFixed(2)}%</strong></div>
+      <div class="metric-line"><span>Packet loss p95</span><strong>${summary.lossP95.toFixed(2)}%</strong></div>
+      <div class="metric-line"><span>Latency p95</span><strong>${summary.latencyP95.toFixed(0)} ms</strong></div>
+    `;
+    card.addEventListener("click", () => onClick(vendor.id));
+    container.appendChild(card);
+  });
+}
+
 function renderVendorChips(selectedVendor, onClick) {
   const container = document.getElementById("vendorChips");
   container.innerHTML = "";
   const vendors = [
     { id: "all", label: "All vendors" },
-    { id: "meraki", label: "Cisco Meraki" },
-    { id: "cradlepoint", label: "ERC Cradlepoint" },
+    { id: "cisco", label: "Cisco" },
+    { id: "ericsson", label: "Ericsson" },
   ];
 
   vendors.forEach((v) => {
@@ -321,10 +391,30 @@ function renderVendorChips(selectedVendor, onClick) {
   });
 }
 
-function renderSiteList(region, vendor, selectedSite, onClick) {
+function renderTechChips(selectedTech, onClick) {
+  const container = document.getElementById("techChips");
+  if (!container) return;
+  container.innerHTML = "";
+  const technologies = [
+    { id: "all", label: TECH_LABELS.all },
+    { id: "4g", label: TECH_LABELS["4g"] },
+    { id: "5g", label: TECH_LABELS["5g"] },
+  ];
+
+  technologies.forEach((tech) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = `tech-chip ${selectedTech === tech.id ? "active" : ""}`;
+    chip.textContent = tech.label;
+    chip.addEventListener("click", () => onClick(tech.id));
+    container.appendChild(chip);
+  });
+}
+
+function renderSiteList(region, vendor, technology, selectedSite, onClick) {
   const container = document.getElementById("siteList");
   container.innerHTML = "";
-  const scopedCustomers = selectionFilters(region, vendor, "all");
+  const scopedCustomers = selectionFilters(region, vendor, "all", technology);
   const siteIds = [...new Set(scopedCustomers.map((c) => c.site))];
 
   const allItem = document.createElement("div");
@@ -347,10 +437,57 @@ function renderSiteList(region, vendor, selectedSite, onClick) {
   });
 }
 
-function renderCustomerTable(region, vendor, site) {
+function renderAccessDrilldowns(region, vendor, site, selectedTech, onSelectTech) {
+  const container = document.getElementById("accessDrilldowns");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const techs = [
+    { id: "4g", label: TECH_LABELS["4g"] },
+    { id: "5g", label: TECH_LABELS["5g"] },
+  ];
+
+  const metrics = [
+    { key: "availability", label: "Availability" },
+    { key: "lossP95", label: "Packet loss p95" },
+    { key: "latencyP95", label: "Latency p95" },
+  ];
+
+  metrics.forEach((metric) => {
+    const card = document.createElement("div");
+    card.className = "drilldown-card";
+    card.innerHTML = `<div class="drilldown-title">${metric.label}</div>`;
+
+    const rows = document.createElement("div");
+    rows.className = "drilldown-rows";
+
+    techs.forEach((tech) => {
+      const summary = averageMetrics(selectionFilters(region, vendor, site, tech.id));
+      const value = summary[metric.key];
+      const formatted =
+        metric.key === "availability"
+          ? `${value.toFixed(2)}%`
+          : metric.key === "lossP95"
+          ? `${value.toFixed(2)}%`
+          : `${value.toFixed(0)} ms`;
+      const statusKey = metric.key === "availability" ? "availability" : metric.key === "lossP95" ? "loss" : "latency";
+      const status = metricStatus(value, statusKey);
+      const row = document.createElement("div");
+      row.className = `drilldown-row ${selectedTech === tech.id ? "active" : ""}`;
+      row.innerHTML = `<span>${tech.label}</span><strong class="${status}">${formatted}</strong>`;
+      row.addEventListener("click", () => onSelectTech(tech.id));
+      rows.appendChild(row);
+    });
+
+    card.appendChild(rows);
+    container.appendChild(card);
+  });
+}
+
+function renderCustomerTable(region, vendor, site, technology) {
   const tbody = document.getElementById("customerTableBody");
   tbody.innerHTML = "";
-  const filtered = selectionFilters(region, vendor, site);
+  const filtered = selectionFilters(region, vendor, site, technology);
 
   filtered.forEach((c) => {
     const row = document.createElement("tr");
@@ -359,7 +496,7 @@ function renderCustomerTable(region, vendor, site) {
       <td>${c.name}</td>
       <td>${c.region.charAt(0).toUpperCase() + c.region.slice(1)}</td>
       <td>${c.site}</td>
-      <td>${c.vendor === "meraki" ? "Cisco Meraki" : "ERC Cradlepoint"}</td>
+      <td>${VENDOR_LABELS[c.vendor] || c.vendor}</td>
       <td class="${metricStatus(c.availability, "availability")}">${c.availability.toFixed(2)}</td>
       <td class="${metricStatus(c.lossP95, "loss")}">${c.lossP95.toFixed(2)}</td>
       <td class="${metricStatus(c.latencyP95, "latency")}">${c.latencyP95.toFixed(0)}</td>
@@ -373,7 +510,7 @@ function renderCustomerTable(region, vendor, site) {
 let transportChart;
 let topCustomersChart;
 
-function renderTopCustomersChart(region, vendor, site) {
+function renderTopCustomersChart(region, vendor, site, technology) {
   const canvas = document.getElementById("topCustomersChart");
   const legend = document.getElementById("topCustomersLegend");
   if (!canvas || !legend) return;
@@ -382,7 +519,7 @@ function renderTopCustomersChart(region, vendor, site) {
   canvas.width = donutSize;
   canvas.height = donutSize;
 
-  const filtered = selectionFilters(region, vendor, site)
+  const filtered = selectionFilters(region, vendor, site, technology)
     .map((customer) => ({ ...customer, usageGb: customer.usageTb * 1024 }))
     .sort((a, b) => b.usageGb - a.usageGb)
     .slice(0, 5);
@@ -454,8 +591,8 @@ function renderTopCustomersChart(region, vendor, site) {
   });
 }
 
-function transportSeriesForRange(rangeKey, region) {
-  const series = transportTimeSeries[rangeKey];
+function transportSeriesForRange(rangeKey, region, technology) {
+  const series = getTransportSeries(rangeKey, technology);
   const labels = series?.labels || [];
 
   if (!series || !labels.length) {
@@ -488,9 +625,9 @@ function transportSeriesForRange(rangeKey, region) {
   };
 }
 
-function buildTransportChart(region, rangeKey) {
+function buildTransportChart(region, rangeKey, technology) {
   const ctx = document.getElementById("transportChart").getContext("2d");
-  const { labels, availabilitySeries, lossSeries, latencySeries } = transportSeriesForRange(rangeKey, region);
+  const { labels, availabilitySeries, lossSeries, latencySeries } = transportSeriesForRange(rangeKey, region, technology);
 
   if (transportChart) transportChart.destroy();
 
@@ -576,12 +713,12 @@ function buildTransportChart(region, rangeKey) {
   });
 }
 
-function updateSelectionPill(region, vendor, site) {
+function updateSelectionPill(region, vendor, site, technology) {
   const regionLabel = region === "all" ? "All regions" : region.charAt(0).toUpperCase() + region.slice(1);
-  const vendorLabel =
-    vendor === "all" ? "All vendors" : vendor === "meraki" ? "Cisco Meraki" : "ERC Cradlepoint";
+  const vendorLabel = vendor === "all" ? "All vendors" : VENDOR_LABELS[vendor] || vendor;
   const siteLabel = site === "all" ? "All sites" : site;
-  document.getElementById("selectionPill").textContent = `${regionLabel} • ${vendorLabel} • ${siteLabel}`;
+  const techLabel = technology === "all" ? TECH_LABELS.all : TECH_LABELS[technology] || technology.toUpperCase();
+  document.getElementById("selectionPill").textContent = `${regionLabel} • ${vendorLabel} • ${siteLabel} • ${techLabel}`;
 }
 
 function initTimeRangeControl(currentRange, onRangeChange) {
@@ -624,12 +761,13 @@ function initDashboard() {
   let selectedVendor = "all";
   let selectedSite = "all";
   let selectedTimeRange = "monthly";
+  let selectedTech = "all";
 
   function refresh() {
-    updateKpiCards(selectedRegion, selectedVendor, selectedSite);
-    renderCustomerTable(selectedRegion, selectedVendor, selectedSite);
-    buildTransportChart(selectedRegion, selectedTimeRange);
-    renderRegionCards(selectedRegion, (region) => {
+    updateKpiCards(selectedRegion, selectedVendor, selectedSite, selectedTech);
+    renderCustomerTable(selectedRegion, selectedVendor, selectedSite, selectedTech);
+    buildTransportChart(selectedRegion, selectedTimeRange, selectedTech);
+    renderRegionCards(selectedRegion, selectedVendor, selectedTech, (region) => {
       selectedRegion = region;
       selectedSite = "all";
       refresh();
@@ -639,12 +777,27 @@ function initDashboard() {
       selectedSite = "all";
       refresh();
     });
-    renderSiteList(selectedRegion, selectedVendor, selectedSite, (site) => {
+    renderTechChips(selectedTech, (tech) => {
+      selectedTech = tech;
+      selectedSite = "all";
+      refresh();
+    });
+    renderVendorScorecards(selectedRegion, selectedTech, selectedSite, selectedVendor, (vendor) => {
+      selectedVendor = vendor;
+      selectedSite = "all";
+      refresh();
+    });
+    renderSiteList(selectedRegion, selectedVendor, selectedTech, selectedSite, (site) => {
       selectedSite = site;
       refresh();
     });
-    renderTopCustomersChart(selectedRegion, selectedVendor, selectedSite);
-    updateSelectionPill(selectedRegion, selectedVendor, selectedSite);
+    renderAccessDrilldowns(selectedRegion, selectedVendor, selectedSite, selectedTech, (tech) => {
+      selectedTech = tech;
+      selectedSite = "all";
+      refresh();
+    });
+    renderTopCustomersChart(selectedRegion, selectedVendor, selectedSite, selectedTech);
+    updateSelectionPill(selectedRegion, selectedVendor, selectedSite, selectedTech);
   }
 
   initTimeRangeControl(selectedTimeRange, (rangeKey) => {
