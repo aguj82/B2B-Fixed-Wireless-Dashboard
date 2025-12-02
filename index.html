@@ -16,6 +16,7 @@
       <div class="dashboard-switch" role="tablist" aria-label="Dashboard selector">
         <button class="dashboard-tab active" data-dashboard="executive" role="tab" aria-selected="true">Overall B2B Performance</button>
         <button class="dashboard-tab" data-dashboard="operations" role="tab" aria-selected="false">Operations &amp; Engineering</button>
+        <button class="dashboard-tab" data-dashboard="product" role="tab" aria-selected="false">B2B Product Performance</button>
       </div>
     </div>
     <div class="topbar-right">
@@ -215,6 +216,87 @@
         <div class="radio-quality-chart">
           <canvas id="radioQualityChart" width="600" height="400"></canvas>
         </div>
+      </div>
+    </section>
+  </main>
+
+  <main class="page dashboard hidden" id="productDashboard">
+    <section class="panel">
+      <div class="panel-header inline">
+        <div>
+          <h2>B2B Product Performance</h2>
+          <p>Compare today’s availability, packet loss, latency, and SLA attainment per product.</p>
+        </div>
+        <div class="pill" id="productSelectionPill">All products • Today</div>
+      </div>
+      <div class="product-grid" id="productCards"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header inline">
+        <div>
+          <h2>Product health scorecards</h2>
+          <p>Selected product KPIs with conditional formatting for today’s status.</p>
+        </div>
+        <div class="pill">Click a product to drill down</div>
+      </div>
+      <div class="kpi-row" id="productKpiRow"></div>
+    </section>
+
+    <section class="grid grid-2">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Time variation • Jan-Nov 2025</h2>
+          <p>Monthly trend with p50 and p95 percentile bands for availability, loss, and latency.</p>
+        </div>
+        <canvas id="productTrendChart" height="280"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Carrier drill-down</h2>
+          <p>Grouped columns to contrast 4G vs 5G performance for the selected product.</p>
+        </div>
+        <canvas id="carrierChart" height="280"></canvas>
+      </div>
+    </section>
+
+    <section class="grid grid-2">
+      <div class="panel">
+        <div class="panel-header inline">
+          <div>
+            <h2>Customer Pareto</h2>
+            <p>Pareto of top SLA gaps with a cumulative line to spotlight the 80/20 group.</p>
+          </div>
+          <div class="pill">Drill into customers</div>
+        </div>
+        <canvas id="customerParetoChart" height="260"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Customer SLA scorecards</h2>
+          <p>Status by customer: improved, steady, or failing.</p>
+        </div>
+        <div class="customer-scorecards" id="customerScorecards"></div>
+      </div>
+    </section>
+
+    <section class="grid grid-2">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Regional view</h2>
+          <p>West, Central, and East performance for the selected product.</p>
+        </div>
+        <div class="product-region-cards" id="productRegionCards"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Vendor drill-down</h2>
+          <p>Side-by-side Cisco and Ericsson scorecards for the chosen product.</p>
+        </div>
+        <div class="vendor-scorecards" id="productVendorCards"></div>
       </div>
     </section>
   </main>

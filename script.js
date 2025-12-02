@@ -124,6 +124,189 @@ const VENDOR_LABELS = {
   ericsson: "Ericsson",
 };
 
+const PRODUCTS = [
+  {
+    id: "smb",
+    name: "Small/Medium Business",
+    availability: 99.22,
+    lossP95: 0.58,
+    latencyP95: 82,
+    slaWithin: 86,
+    monthly: [
+      { month: "Jan", availability: { p50: 99.1, p95: 99.6, mean: 99.25 }, loss: { p50: 0.55, p95: 0.9, mean: 0.62 }, latency: { p50: 78, p95: 96, mean: 84 } },
+      { month: "Feb", availability: { p50: 99.12, p95: 99.62, mean: 99.2 }, loss: { p50: 0.52, p95: 0.86, mean: 0.6 }, latency: { p50: 77, p95: 95, mean: 83 } },
+      { month: "Mar", availability: { p50: 99.08, p95: 99.58, mean: 99.18 }, loss: { p50: 0.58, p95: 0.94, mean: 0.65 }, latency: { p50: 80, p95: 98, mean: 85 } },
+      { month: "Apr", availability: { p50: 99.2, p95: 99.64, mean: 99.28 }, loss: { p50: 0.5, p95: 0.88, mean: 0.58 }, latency: { p50: 79, p95: 95, mean: 83 } },
+      { month: "May", availability: { p50: 99.26, p95: 99.7, mean: 99.34 }, loss: { p50: 0.48, p95: 0.82, mean: 0.55 }, latency: { p50: 78, p95: 93, mean: 82 } },
+      { month: "Jun", availability: { p50: 99.24, p95: 99.68, mean: 99.32 }, loss: { p50: 0.5, p95: 0.86, mean: 0.56 }, latency: { p50: 77, p95: 92, mean: 81 } },
+      { month: "Jul", availability: { p50: 99.18, p95: 99.62, mean: 99.24 }, loss: { p50: 0.55, p95: 0.9, mean: 0.6 }, latency: { p50: 79, p95: 96, mean: 84 } },
+      { month: "Aug", availability: { p50: 99.16, p95: 99.6, mean: 99.22 }, loss: { p50: 0.57, p95: 0.92, mean: 0.62 }, latency: { p50: 80, p95: 97, mean: 85 } },
+      { month: "Sep", availability: { p50: 99.22, p95: 99.66, mean: 99.3 }, loss: { p50: 0.5, p95: 0.84, mean: 0.55 }, latency: { p50: 78, p95: 92, mean: 82 } },
+      { month: "Oct", availability: { p50: 99.3, p95: 99.72, mean: 99.38 }, loss: { p50: 0.46, p95: 0.8, mean: 0.52 }, latency: { p50: 76, p95: 90, mean: 80 } },
+      { month: "Nov", availability: { p50: 99.28, p95: 99.7, mean: 99.35 }, loss: { p50: 0.48, p95: 0.82, mean: 0.54 }, latency: { p50: 77, p95: 91, mean: 81 } },
+    ],
+    carriers: {
+      "4g": { availability: 99.1, lossP95: 0.68, latencyP95: 88, slaWithin: 83 },
+      "5g": { availability: 99.34, lossP95: 0.48, latencyP95: 77, slaWithin: 89 },
+    },
+    customers: [
+      { name: "Bank", slaWithin: 82, availability: 99.12, lossP95: 0.66, latencyP95: 88, status: "improved" },
+      { name: "Healthcare provider", slaWithin: 85, availability: 99.2, lossP95: 0.6, latencyP95: 85, status: "steady" },
+      { name: "Coffee chain", slaWithin: 81, availability: 99.05, lossP95: 0.74, latencyP95: 90, status: "failing" },
+      { name: "Retail chain", slaWithin: 88, availability: 99.32, lossP95: 0.52, latencyP95: 80, status: "improved" },
+      { name: "Production house", slaWithin: 84, availability: 99.18, lossP95: 0.62, latencyP95: 86, status: "steady" },
+      { name: "Manufacturer", slaWithin: 83, availability: 99.14, lossP95: 0.64, latencyP95: 87, status: "steady" },
+      { name: "Public agency", slaWithin: 86, availability: 99.26, lossP95: 0.58, latencyP95: 84, status: "improved" },
+      { name: "Collage", slaWithin: 82, availability: 99.1, lossP95: 0.66, latencyP95: 89, status: "failing" },
+      { name: "School", slaWithin: 87, availability: 99.28, lossP95: 0.56, latencyP95: 83, status: "improved" },
+    ],
+    regions: {
+      west: { availability: 99.3, lossP95: 0.52, latencyP95: 81, slaWithin: 89 },
+      central: { availability: 99.1, lossP95: 0.64, latencyP95: 86, slaWithin: 84 },
+      east: { availability: 99.2, lossP95: 0.58, latencyP95: 83, slaWithin: 87 },
+    },
+    vendors: {
+      cisco: { availability: 99.34, lossP95: 0.48, latencyP95: 79, slaWithin: 90 },
+      ericsson: { availability: 99.1, lossP95: 0.66, latencyP95: 86, slaWithin: 83 },
+    },
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise Internet",
+    availability: 99.44,
+    lossP95: 0.42,
+    latencyP95: 74,
+    slaWithin: 91,
+    monthly: [
+      { month: "Jan", availability: { p50: 99.32, p95: 99.78, mean: 99.45 }, loss: { p50: 0.4, p95: 0.7, mean: 0.48 }, latency: { p50: 70, p95: 88, mean: 75 } },
+      { month: "Feb", availability: { p50: 99.36, p95: 99.8, mean: 99.48 }, loss: { p50: 0.38, p95: 0.68, mean: 0.46 }, latency: { p50: 69, p95: 86, mean: 74 } },
+      { month: "Mar", availability: { p50: 99.34, p95: 99.76, mean: 99.46 }, loss: { p50: 0.42, p95: 0.72, mean: 0.5 }, latency: { p50: 71, p95: 87, mean: 75 } },
+      { month: "Apr", availability: { p50: 99.38, p95: 99.8, mean: 99.5 }, loss: { p50: 0.36, p95: 0.66, mean: 0.44 }, latency: { p50: 69, p95: 85, mean: 73 } },
+      { month: "May", availability: { p50: 99.42, p95: 99.82, mean: 99.54 }, loss: { p50: 0.34, p95: 0.64, mean: 0.42 }, latency: { p50: 68, p95: 84, mean: 72 } },
+      { month: "Jun", availability: { p50: 99.4, p95: 99.8, mean: 99.52 }, loss: { p50: 0.36, p95: 0.66, mean: 0.44 }, latency: { p50: 69, p95: 85, mean: 73 } },
+      { month: "Jul", availability: { p50: 99.36, p95: 99.76, mean: 99.48 }, loss: { p50: 0.4, p95: 0.7, mean: 0.46 }, latency: { p50: 70, p95: 86, mean: 74 } },
+      { month: "Aug", availability: { p50: 99.34, p95: 99.74, mean: 99.46 }, loss: { p50: 0.42, p95: 0.72, mean: 0.48 }, latency: { p50: 71, p95: 87, mean: 75 } },
+      { month: "Sep", availability: { p50: 99.4, p95: 99.8, mean: 99.52 }, loss: { p50: 0.36, p95: 0.64, mean: 0.44 }, latency: { p50: 69, p95: 84, mean: 73 } },
+      { month: "Oct", availability: { p50: 99.46, p95: 99.84, mean: 99.56 }, loss: { p50: 0.32, p95: 0.62, mean: 0.4 }, latency: { p50: 67, p95: 82, mean: 71 } },
+      { month: "Nov", availability: { p50: 99.44, p95: 99.82, mean: 99.54 }, loss: { p50: 0.34, p95: 0.64, mean: 0.42 }, latency: { p50: 68, p95: 83, mean: 72 } },
+    ],
+    carriers: {
+      "4g": { availability: 99.32, lossP95: 0.52, latencyP95: 79, slaWithin: 88 },
+      "5g": { availability: 99.56, lossP95: 0.34, latencyP95: 69, slaWithin: 93 },
+    },
+    customers: [
+      { name: "Bank", slaWithin: 92, availability: 99.5, lossP95: 0.32, latencyP95: 72, status: "improved" },
+      { name: "Healthcare provider", slaWithin: 90, availability: 99.42, lossP95: 0.38, latencyP95: 76, status: "steady" },
+      { name: "Coffee chain", slaWithin: 88, availability: 99.36, lossP95: 0.44, latencyP95: 78, status: "steady" },
+      { name: "Retail chain", slaWithin: 94, availability: 99.58, lossP95: 0.3, latencyP95: 70, status: "improved" },
+      { name: "Production house", slaWithin: 91, availability: 99.46, lossP95: 0.4, latencyP95: 74, status: "improved" },
+      { name: "Manufacturer", slaWithin: 89, availability: 99.4, lossP95: 0.42, latencyP95: 76, status: "steady" },
+      { name: "Public agency", slaWithin: 93, availability: 99.52, lossP95: 0.36, latencyP95: 72, status: "improved" },
+      { name: "Collage", slaWithin: 87, availability: 99.34, lossP95: 0.46, latencyP95: 79, status: "failing" },
+      { name: "School", slaWithin: 90, availability: 99.44, lossP95: 0.4, latencyP95: 74, status: "steady" },
+    ],
+    regions: {
+      west: { availability: 99.5, lossP95: 0.36, latencyP95: 72, slaWithin: 93 },
+      central: { availability: 99.42, lossP95: 0.44, latencyP95: 76, slaWithin: 90 },
+      east: { availability: 99.46, lossP95: 0.38, latencyP95: 73, slaWithin: 92 },
+    },
+    vendors: {
+      cisco: { availability: 99.54, lossP95: 0.34, latencyP95: 71, slaWithin: 94 },
+      ericsson: { availability: 99.38, lossP95: 0.46, latencyP95: 77, slaWithin: 88 },
+    },
+  },
+  {
+    id: "government",
+    name: "Government Internet",
+    availability: 99.36,
+    lossP95: 0.48,
+    latencyP95: 76,
+    slaWithin: 89,
+    monthly: [
+      { month: "Jan", availability: { p50: 99.28, p95: 99.7, mean: 99.4 }, loss: { p50: 0.46, p95: 0.78, mean: 0.52 }, latency: { p50: 72, p95: 88, mean: 76 } },
+      { month: "Feb", availability: { p50: 99.3, p95: 99.72, mean: 99.42 }, loss: { p50: 0.44, p95: 0.76, mean: 0.5 }, latency: { p50: 71, p95: 87, mean: 75 } },
+      { month: "Mar", availability: { p50: 99.26, p95: 99.68, mean: 99.38 }, loss: { p50: 0.48, p95: 0.8, mean: 0.54 }, latency: { p50: 73, p95: 89, mean: 77 } },
+      { month: "Apr", availability: { p50: 99.32, p95: 99.72, mean: 99.44 }, loss: { p50: 0.42, p95: 0.74, mean: 0.5 }, latency: { p50: 72, p95: 87, mean: 75 } },
+      { month: "May", availability: { p50: 99.36, p95: 99.74, mean: 99.46 }, loss: { p50: 0.4, p95: 0.72, mean: 0.48 }, latency: { p50: 71, p95: 86, mean: 74 } },
+      { month: "Jun", availability: { p50: 99.34, p95: 99.72, mean: 99.44 }, loss: { p50: 0.42, p95: 0.74, mean: 0.5 }, latency: { p50: 72, p95: 86, mean: 75 } },
+      { month: "Jul", availability: { p50: 99.3, p95: 99.7, mean: 99.4 }, loss: { p50: 0.46, p95: 0.78, mean: 0.52 }, latency: { p50: 72, p95: 87, mean: 76 } },
+      { month: "Aug", availability: { p50: 99.28, p95: 99.68, mean: 99.38 }, loss: { p50: 0.48, p95: 0.8, mean: 0.54 }, latency: { p50: 73, p95: 88, mean: 77 } },
+      { month: "Sep", availability: { p50: 99.34, p95: 99.72, mean: 99.44 }, loss: { p50: 0.42, p95: 0.74, mean: 0.5 }, latency: { p50: 72, p95: 86, mean: 75 } },
+      { month: "Oct", availability: { p50: 99.4, p95: 99.76, mean: 99.5 }, loss: { p50: 0.38, p95: 0.7, mean: 0.46 }, latency: { p50: 70, p95: 85, mean: 73 } },
+      { month: "Nov", availability: { p50: 99.38, p95: 99.74, mean: 99.48 }, loss: { p50: 0.4, p95: 0.72, mean: 0.48 }, latency: { p50: 71, p95: 85, mean: 74 } },
+    ],
+    carriers: {
+      "4g": { availability: 99.24, lossP95: 0.58, latencyP95: 82, slaWithin: 86 },
+      "5g": { availability: 99.48, lossP95: 0.38, latencyP95: 71, slaWithin: 92 },
+    },
+    customers: [
+      { name: "Bank", slaWithin: 90, availability: 99.44, lossP95: 0.4, latencyP95: 74, status: "improved" },
+      { name: "Healthcare provider", slaWithin: 88, availability: 99.36, lossP95: 0.46, latencyP95: 76, status: "steady" },
+      { name: "Coffee chain", slaWithin: 86, availability: 99.28, lossP95: 0.5, latencyP95: 78, status: "steady" },
+      { name: "Retail chain", slaWithin: 91, availability: 99.5, lossP95: 0.38, latencyP95: 72, status: "improved" },
+      { name: "Production house", slaWithin: 89, availability: 99.4, lossP95: 0.44, latencyP95: 75, status: "steady" },
+      { name: "Manufacturer", slaWithin: 87, availability: 99.32, lossP95: 0.48, latencyP95: 77, status: "failing" },
+      { name: "Public agency", slaWithin: 92, availability: 99.54, lossP95: 0.36, latencyP95: 71, status: "improved" },
+      { name: "Collage", slaWithin: 86, availability: 99.3, lossP95: 0.5, latencyP95: 79, status: "failing" },
+      { name: "School", slaWithin: 88, availability: 99.36, lossP95: 0.46, latencyP95: 75, status: "steady" },
+    ],
+    regions: {
+      west: { availability: 99.42, lossP95: 0.44, latencyP95: 74, slaWithin: 91 },
+      central: { availability: 99.32, lossP95: 0.52, latencyP95: 79, slaWithin: 87 },
+      east: { availability: 99.36, lossP95: 0.48, latencyP95: 75, slaWithin: 89 },
+    },
+    vendors: {
+      cisco: { availability: 99.48, lossP95: 0.4, latencyP95: 73, slaWithin: 92 },
+      ericsson: { availability: 99.3, lossP95: 0.52, latencyP95: 78, slaWithin: 86 },
+    },
+  },
+  {
+    id: "education",
+    name: "Education Internet",
+    availability: 99.18,
+    lossP95: 0.62,
+    latencyP95: 84,
+    slaWithin: 84,
+    monthly: [
+      { month: "Jan", availability: { p50: 99.06, p95: 99.52, mean: 99.18 }, loss: { p50: 0.6, p95: 0.96, mean: 0.68 }, latency: { p50: 81, p95: 102, mean: 87 } },
+      { month: "Feb", availability: { p50: 99.1, p95: 99.54, mean: 99.2 }, loss: { p50: 0.58, p95: 0.94, mean: 0.66 }, latency: { p50: 80, p95: 100, mean: 86 } },
+      { month: "Mar", availability: { p50: 99.04, p95: 99.48, mean: 99.14 }, loss: { p50: 0.64, p95: 1.0, mean: 0.72 }, latency: { p50: 83, p95: 104, mean: 89 } },
+      { month: "Apr", availability: { p50: 99.12, p95: 99.52, mean: 99.22 }, loss: { p50: 0.56, p95: 0.94, mean: 0.66 }, latency: { p50: 82, p95: 102, mean: 88 } },
+      { month: "May", availability: { p50: 99.18, p95: 99.56, mean: 99.26 }, loss: { p50: 0.54, p95: 0.9, mean: 0.64 }, latency: { p50: 81, p95: 100, mean: 86 } },
+      { month: "Jun", availability: { p50: 99.16, p95: 99.54, mean: 99.24 }, loss: { p50: 0.56, p95: 0.92, mean: 0.64 }, latency: { p50: 80, p95: 99, mean: 85 } },
+      { month: "Jul", availability: { p50: 99.1, p95: 99.5, mean: 99.2 }, loss: { p50: 0.6, p95: 0.96, mean: 0.68 }, latency: { p50: 82, p95: 102, mean: 88 } },
+      { month: "Aug", availability: { p50: 99.08, p95: 99.48, mean: 99.18 }, loss: { p50: 0.62, p95: 0.98, mean: 0.7 }, latency: { p50: 83, p95: 103, mean: 89 } },
+      { month: "Sep", availability: { p50: 99.16, p95: 99.54, mean: 99.24 }, loss: { p50: 0.56, p95: 0.92, mean: 0.64 }, latency: { p50: 81, p95: 99, mean: 86 } },
+      { month: "Oct", availability: { p50: 99.22, p95: 99.58, mean: 99.3 }, loss: { p50: 0.52, p95: 0.88, mean: 0.6 }, latency: { p50: 80, p95: 98, mean: 85 } },
+      { month: "Nov", availability: { p50: 99.2, p95: 99.56, mean: 99.28 }, loss: { p50: 0.54, p95: 0.9, mean: 0.62 }, latency: { p50: 81, p95: 98, mean: 85 } },
+    ],
+    carriers: {
+      "4g": { availability: 99.08, lossP95: 0.7, latencyP95: 90, slaWithin: 81 },
+      "5g": { availability: 99.26, lossP95: 0.54, latencyP95: 78, slaWithin: 87 },
+    },
+    customers: [
+      { name: "Bank", slaWithin: 80, availability: 99.12, lossP95: 0.66, latencyP95: 90, status: "failing" },
+      { name: "Healthcare provider", slaWithin: 83, availability: 99.18, lossP95: 0.6, latencyP95: 86, status: "steady" },
+      { name: "Coffee chain", slaWithin: 78, availability: 99.06, lossP95: 0.72, latencyP95: 93, status: "failing" },
+      { name: "Retail chain", slaWithin: 86, availability: 99.24, lossP95: 0.56, latencyP95: 82, status: "improved" },
+      { name: "Production house", slaWithin: 82, availability: 99.16, lossP95: 0.62, latencyP95: 88, status: "steady" },
+      { name: "Manufacturer", slaWithin: 81, availability: 99.12, lossP95: 0.64, latencyP95: 89, status: "steady" },
+      { name: "Public agency", slaWithin: 85, availability: 99.22, lossP95: 0.58, latencyP95: 84, status: "improved" },
+      { name: "Collage", slaWithin: 79, availability: 99.08, lossP95: 0.68, latencyP95: 92, status: "failing" },
+      { name: "School", slaWithin: 84, availability: 99.18, lossP95: 0.6, latencyP95: 86, status: "steady" },
+    ],
+    regions: {
+      west: { availability: 99.22, lossP95: 0.58, latencyP95: 82, slaWithin: 86 },
+      central: { availability: 99.12, lossP95: 0.66, latencyP95: 88, slaWithin: 82 },
+      east: { availability: 99.18, lossP95: 0.62, latencyP95: 85, slaWithin: 84 },
+    },
+    vendors: {
+      cisco: { availability: 99.26, lossP95: 0.56, latencyP95: 81, slaWithin: 87 },
+      ericsson: { availability: 99.12, lossP95: 0.68, latencyP95: 88, slaWithin: 81 },
+    },
+  },
+];
+
 const TECH_ADJUSTMENTS = {
   all: { availability: 0, lossP95: 0, latencyP95: 0 },
   "4g": { availability: -0.12, lossP95: 0.08, latencyP95: 7 },
@@ -517,6 +700,9 @@ function renderCustomerTable(region, vendor, site, technology) {
 
 let transportChart;
 let topCustomersChart;
+let productTrendChart;
+let carrierChart;
+let customerParetoChart;
 
 function renderTopCustomersChart(region, vendor, site, technology) {
   const canvas = document.getElementById("topCustomersChart");
@@ -822,10 +1008,12 @@ document.addEventListener("DOMContentLoaded", initDashboard);
 const DASHBOARD_IDS = {
   executive: "executiveDashboard",
   operations: "operationsDashboard",
+  product: "productDashboard",
 };
 
 let dashboardTabsInitialized = false;
 let operationsInitialized = false;
+let productInitialized = false;
 let opsTransportChart;
 let radioQualityChart;
 
@@ -847,6 +1035,11 @@ function switchDashboard(target) {
     initOperationsDashboard();
     operationsInitialized = true;
   }
+
+  if (target === "product" && !productInitialized) {
+    initProductDashboard();
+    productInitialized = true;
+  }
 }
 
 function initDashboardTabs() {
@@ -859,6 +1052,388 @@ function initDashboardTabs() {
       switchDashboard(target);
     });
   });
+}
+
+function productStatusClass(value, metricKey) {
+  if (metricKey === "availability") return metricStatus(value, "availability");
+  if (metricKey === "lossP95") return metricStatus(value, "loss");
+  if (metricKey === "latencyP95") return metricStatus(value, "latency");
+  return value >= 90 ? "good" : value >= 80 ? "warn" : "bad";
+}
+
+function renderProductCards(selectedId, onSelect) {
+  const container = document.getElementById("productCards");
+  if (!container) return;
+  container.innerHTML = "";
+
+  PRODUCTS.forEach((product) => {
+    const status = productStatusClass(product.slaWithin, "slaWithin");
+    const card = document.createElement("div");
+    card.className = `product-card ${selectedId === product.id ? "active" : ""}`;
+    card.innerHTML = `
+      <div class="product-card-header">
+        <div>
+          <h3>${product.name}</h3>
+          <p class="caption">Today</p>
+        </div>
+        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Out of SLA"}</span>
+      </div>
+      <div class="product-metrics">
+        <div><span>Availability</span><strong>${product.availability.toFixed(2)}%</strong></div>
+        <div><span>Loss p95</span><strong>${product.lossP95.toFixed(2)}%</strong></div>
+        <div><span>Latency p95</span><strong>${product.latencyP95.toFixed(0)} ms</strong></div>
+        <div><span>SLA within</span><strong>${product.slaWithin.toFixed(0)}%</strong></div>
+      </div>
+    `;
+    card.addEventListener("click", () => onSelect(product.id));
+    container.appendChild(card);
+  });
+}
+
+function renderProductKpis(product) {
+  const container = document.getElementById("productKpiRow");
+  if (!container) return;
+  container.innerHTML = "";
+  const metrics = [
+    { key: "availability", label: "Availability" },
+    { key: "lossP95", label: "Packet loss p95" },
+    { key: "latencyP95", label: "Latency p95" },
+    { key: "slaWithin", label: "Customers within SLA" },
+  ];
+
+  metrics.forEach((metric) => {
+    const value = product[metric.key];
+    const status = productStatusClass(value, metric.key);
+    const valueText = metric.key === "latencyP95" ? `${value.toFixed(0)} ms` : `${value.toFixed(metric.key === "slaWithin" ? 0 : 2)}%`;
+    const subtitle =
+      metric.key === "availability"
+        ? "Target ≥ 99.5%"
+        : metric.key === "lossP95"
+        ? "Target ≤ 0.50%"
+        : metric.key === "latencyP95"
+        ? "Target ≤ 80 ms"
+        : "Availability + Loss + Latency";
+
+    const card = document.createElement("div");
+    card.className = `kpi-card ${status}`;
+    card.innerHTML = `
+      <div class="kpi-label">${metric.label}</div>
+      <div class="kpi-value">${valueText}</div>
+      <div class="kpi-subtitle">${subtitle}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function buildProductTrendChart(product) {
+  const canvas = document.getElementById("productTrendChart");
+  if (!canvas || !product) return;
+  const labels = product.monthly.map((m) => `${m.month} 2025`);
+  const colorMap = {
+    availability: "#22c55e",
+    loss: "#38bdf8",
+    latency: "#a78bfa",
+  };
+
+  const datasets = [];
+  [
+    { key: "availability", label: "Availability %", accessor: (m) => m.availability },
+    { key: "loss", label: "Packet loss p95 %", accessor: (m) => m.loss },
+    { key: "latency", label: "Latency p95 ms", accessor: (m) => m.latency },
+  ].forEach(({ key, label, accessor }) => {
+    const color = colorMap[key === "availability" ? "availability" : key];
+    const points = product.monthly.map((m) => accessor(m));
+    datasets.push({
+      label: `${label} p95`,
+      data: points.map((p) => p.p95),
+      borderColor: "transparent",
+      backgroundColor: `${color}33`,
+      fill: false,
+      pointRadius: 0,
+      yAxisID: key === "availability" ? "yAvail" : key === "loss" ? "yLoss" : "yLatency",
+      tension: 0.35,
+    });
+    datasets.push({
+      label: `${label} p50`,
+      data: points.map((p) => p.p50),
+      borderColor: "transparent",
+      backgroundColor: `${color}2a`,
+      fill: -1,
+      pointRadius: 0,
+      yAxisID: key === "availability" ? "yAvail" : key === "loss" ? "yLoss" : "yLatency",
+      tension: 0.35,
+    });
+    datasets.push({
+      label,
+      data: points.map((p) => p.mean),
+      borderColor: color,
+      backgroundColor: color,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+      fill: false,
+      yAxisID: key === "availability" ? "yAvail" : key === "loss" ? "yLoss" : "yLatency",
+      tension: 0.35,
+    });
+  });
+
+  if (productTrendChart) productTrendChart.destroy();
+  productTrendChart = new Chart(canvas, {
+    type: "line",
+    data: { labels, datasets },
+    options: {
+      plugins: {
+        legend: { labels: { color: "#cbd5f5", boxWidth: 12 } },
+        tooltip: { mode: "index", intersect: false },
+      },
+      scales: {
+        x: {
+          ticks: { color: "#cbd5f5" },
+          grid: { color: "#1e293b" },
+        },
+        yAvail: {
+          position: "left",
+          ticks: { color: "#cbd5f5", callback: (v) => v.toFixed(2) + "%" },
+          min: 98.8,
+          max: 100,
+          grid: { color: "#1e293b" },
+        },
+        yLoss: {
+          position: "right",
+          ticks: { color: "#cbd5f5", callback: (v) => v + "%" },
+          min: 0,
+          max: 1.2,
+          grid: { color: "#0b1227" },
+        },
+        yLatency: {
+          position: "right",
+          ticks: { color: "#cbd5f5", callback: (v) => v + " ms" },
+          min: 65,
+          max: 110,
+          grid: { display: false },
+        },
+      },
+      maintainAspectRatio: false,
+    },
+  });
+}
+
+function buildCarrierChart(product) {
+  const canvas = document.getElementById("carrierChart");
+  if (!canvas || !product) return;
+  const labels = ["Availability", "Loss p95", "Latency p95", "SLA within"];
+  const datasetFor = (tech) => [
+    product.carriers[tech].availability,
+    product.carriers[tech].lossP95,
+    product.carriers[tech].latencyP95,
+    product.carriers[tech].slaWithin,
+  ];
+
+  if (carrierChart) carrierChart.destroy();
+  carrierChart = new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "4G",
+          data: datasetFor("4g"),
+          backgroundColor: "rgba(56, 189, 248, 0.6)",
+        },
+        {
+          label: "5G",
+          data: datasetFor("5g"),
+          backgroundColor: "rgba(124, 58, 237, 0.65)",
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: { labels: { color: "#cbd5f5" } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const unit = ctx.dataIndex === 2 ? " ms" : "%";
+              return `${ctx.dataset.label}: ${ctx.formattedValue}${unit}`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: { ticks: { color: "#cbd5f5" }, grid: { color: "#1e293b" } },
+        y: {
+          ticks: { color: "#cbd5f5" },
+          min: 0,
+          max: 110,
+          grid: { color: "#1e293b" },
+        },
+      },
+      maintainAspectRatio: false,
+    },
+  });
+}
+
+function buildCustomerParetoChart(product) {
+  const canvas = document.getElementById("customerParetoChart");
+  if (!canvas || !product) return;
+  const sorted = [...product.customers].sort((a, b) => b.slaWithin - a.slaWithin);
+  const gaps = sorted.map((c) => 100 - c.slaWithin);
+  const totalGap = gaps.reduce((a, v) => a + v, 0) || 1;
+  let cumulative = 0;
+  const cumulativePct = gaps.map((gap) => {
+    cumulative += gap;
+    return (cumulative / totalGap) * 100;
+  });
+
+  if (customerParetoChart) customerParetoChart.destroy();
+  customerParetoChart = new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: sorted.map((c) => c.name),
+      datasets: [
+        {
+          type: "bar",
+          label: "SLA gap",
+          data: gaps,
+          backgroundColor: "rgba(249, 115, 115, 0.7)",
+          yAxisID: "yGap",
+        },
+        {
+          type: "line",
+          label: "Cumulative %",
+          data: cumulativePct,
+          borderColor: "#22c55e",
+          backgroundColor: "#22c55e",
+          yAxisID: "yCum",
+          tension: 0.3,
+          fill: false,
+          pointRadius: 4,
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: { labels: { color: "#cbd5f5" } },
+      },
+      scales: {
+        x: { ticks: { color: "#cbd5f5", autoSkip: false }, grid: { color: "#1e293b" } },
+        yGap: {
+          position: "left",
+          ticks: { color: "#cbd5f5", callback: (v) => v + "%" },
+          grid: { color: "#1e293b" },
+          min: 0,
+          max: Math.max(30, Math.ceil(Math.max(...gaps, 0) / 10) * 10),
+        },
+        yCum: {
+          position: "right",
+          ticks: { color: "#cbd5f5", callback: (v) => v + "%" },
+          grid: { display: false },
+          min: 0,
+          max: 100,
+        },
+      },
+      maintainAspectRatio: false,
+    },
+  });
+}
+
+function renderCustomerScorecards(product) {
+  const container = document.getElementById("customerScorecards");
+  if (!container) return;
+  container.innerHTML = "";
+  product.customers.forEach((cust) => {
+    const statusClass = cust.status === "improved" ? "good" : cust.status === "steady" ? "warn" : "bad";
+    const card = document.createElement("div");
+    card.className = "customer-card";
+    card.innerHTML = `
+      <div class="customer-card-header">
+        <h4>${cust.name}</h4>
+        <span class="status-pill ${statusClass}">${cust.status}</span>
+      </div>
+      <div class="customer-metrics">
+        <div><span>Availability</span><strong>${cust.availability.toFixed(2)}%</strong></div>
+        <div><span>Loss p95</span><strong>${cust.lossP95.toFixed(2)}%</strong></div>
+        <div><span>Latency p95</span><strong>${cust.latencyP95.toFixed(0)} ms</strong></div>
+        <div><span>SLA within</span><strong>${cust.slaWithin.toFixed(0)}%</strong></div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderProductRegions(product) {
+  const container = document.getElementById("productRegionCards");
+  if (!container) return;
+  container.innerHTML = "";
+  ["west", "central", "east"].forEach((region) => {
+    const summary = product.regions[region];
+    const status = productStatusClass(summary.slaWithin, "slaWithin");
+    const card = document.createElement("div");
+    card.className = `region-card ${status}`;
+    card.innerHTML = `
+      <div class="title-row">
+        <h3>${region.charAt(0).toUpperCase() + region.slice(1)}</h3>
+        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Out of SLA"}</span>
+      </div>
+      <div class="metric-line"><span>Availability</span><strong>${summary.availability.toFixed(2)}%</strong></div>
+      <div class="metric-line"><span>Packet loss p95</span><strong>${summary.lossP95.toFixed(2)}%</strong></div>
+      <div class="metric-line"><span>Latency p95</span><strong>${summary.latencyP95.toFixed(0)} ms</strong></div>
+      <div class="metric-line"><span>SLA within target</span><strong>${summary.slaWithin.toFixed(0)}%</strong></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderProductVendors(product) {
+  const container = document.getElementById("productVendorCards");
+  if (!container) return;
+  container.innerHTML = "";
+  [
+    { id: "cisco", label: "Cisco" },
+    { id: "ericsson", label: "Ericsson" },
+  ].forEach((vendor) => {
+    const summary = product.vendors[vendor.id];
+    const status = productStatusClass(summary.slaWithin, "slaWithin");
+    const card = document.createElement("div");
+    card.className = "vendor-card";
+    card.innerHTML = `
+      <div class="title-row">
+        <h4>${vendor.label}</h4>
+        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Out of SLA"}</span>
+      </div>
+      <div class="metric-line"><span>Availability</span><strong>${summary.availability.toFixed(2)}%</strong></div>
+      <div class="metric-line"><span>Packet loss p95</span><strong>${summary.lossP95.toFixed(2)}%</strong></div>
+      <div class="metric-line"><span>Latency p95</span><strong>${summary.latencyP95.toFixed(0)} ms</strong></div>
+      <div class="metric-line"><span>SLA within</span><strong>${summary.slaWithin.toFixed(0)}%</strong></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function updateProductPill(product) {
+  const pill = document.getElementById("productSelectionPill");
+  if (!pill || !product) return;
+  pill.textContent = `${product.name} • Today`;
+}
+
+function initProductDashboard() {
+  let selectedProduct = PRODUCTS[0];
+
+  function refresh() {
+    renderProductCards(selectedProduct.id, (id) => {
+      selectedProduct = PRODUCTS.find((p) => p.id === id) || selectedProduct;
+      refresh();
+    });
+    renderProductKpis(selectedProduct);
+    buildProductTrendChart(selectedProduct);
+    buildCarrierChart(selectedProduct);
+    buildCustomerParetoChart(selectedProduct);
+    renderCustomerScorecards(selectedProduct);
+    renderProductRegions(selectedProduct);
+    renderProductVendors(selectedProduct);
+    updateProductPill(selectedProduct);
+  }
+
+  refresh();
 }
 
 function generateOpsTransportSeries() {
