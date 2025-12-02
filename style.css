@@ -414,6 +414,18 @@ body {
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
 }
 
+.chart-square {
+  width: 320px;
+  height: 320px;
+  align-self: flex-start;
+}
+
+.chart-square canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
 .panel {
   background: var(--bg-elevated);
   border-radius: 1rem;
