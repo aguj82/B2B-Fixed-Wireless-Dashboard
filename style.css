@@ -415,9 +415,10 @@ body {
 }
 
 .chart-square {
-  width: 320px;
-  height: 320px;
-  align-self: flex-start;
+  width: 100%;
+  max-width: none;
+  height: 360px;
+  align-self: stretch;
 }
 
 .chart-square canvas {
@@ -762,6 +763,14 @@ td.bad { color: var(--bad); }
   width: 600px;
   height: 400px;
   display: block;
+}
+
+#carrierChart,
+#customerParetoChart {
+  width: 100% !important;
+  height: 320px !important;
+  display: block;
+  max-width: none;
 }
 
 .heatmap-controls {
