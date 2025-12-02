@@ -15,8 +15,8 @@
       <p class="subtitle">Switch between the overall B2B performance snapshot and the Operations &amp; Engineering view.</p>
       <div class="dashboard-switch" role="tablist" aria-label="Dashboard selector">
         <button class="dashboard-tab active" data-dashboard="executive" role="tab" aria-selected="true">Overall B2B Performance</button>
-        <button class="dashboard-tab" data-dashboard="operations" role="tab" aria-selected="false">Operations &amp; Engineering</button>
         <button class="dashboard-tab" data-dashboard="product" role="tab" aria-selected="false">B2B Product Performance</button>
+        <button class="dashboard-tab" data-dashboard="operations" role="tab" aria-selected="false">Operations &amp; Engineering</button>
       </div>
     </div>
     <div class="topbar-right">
@@ -249,7 +249,9 @@
           <h2>Time variation • Jan-Nov 2025</h2>
           <p>Monthly trend with p50 and p95 percentile bands for availability, loss, and latency.</p>
         </div>
-        <canvas id="productTrendChart" height="280"></canvas>
+        <div class="chart-square">
+          <canvas id="productTrendChart"></canvas>
+        </div>
       </div>
 
       <div class="panel">

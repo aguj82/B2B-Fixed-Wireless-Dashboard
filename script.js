@@ -1128,6 +1128,8 @@ function renderProductKpis(product) {
 function buildProductTrendChart(product) {
   const canvas = document.getElementById("productTrendChart");
   if (!canvas || !product) return;
+  canvas.width = 320;
+  canvas.height = 320;
   const labels = product.monthly.map((m) => `${m.month} 2025`);
   const colorMap = {
     availability: "#22c55e",
