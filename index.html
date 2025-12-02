@@ -43,6 +43,25 @@
   </header>
 
   <main class="page dashboard" id="executiveDashboard">
+    <section class="panel filters-panel">
+      <div class="panel-header inline">
+        <div>
+          <h2>Performance drill-downs</h2>
+          <p>Slice KPIs by access technology or vendor to focus on the right cohort.</p>
+        </div>
+        <div class="filter-groups">
+          <div class="filter-group">
+            <span class="caption">Access technology</span>
+            <div class="chip-row" id="techChips"></div>
+          </div>
+          <div class="filter-group">
+            <span class="caption">Vendors</span>
+            <div class="chip-row" id="vendorChips"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="kpi-row kpi-row-3">
       <div class="kpi-card" data-metric="availability">
         <div class="kpi-label">Availability (avg)</div>
@@ -69,6 +88,17 @@
     <section class="panel">
       <div class="panel-header inline">
         <div>
+          <h2>Access KPI drill-downs</h2>
+          <p>Compare 4G vs 5G availability, latency and packet loss for the active filters.</p>
+        </div>
+        <div class="pill">Click a row to focus a technology</div>
+      </div>
+      <div class="drilldown-grid" id="accessDrilldowns"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header inline">
+        <div>
           <h2>Regional scorecards</h2>
           <p>Click a region to drill into sites, vendor performance and customers.</p>
         </div>
@@ -89,9 +119,9 @@
       <div class="panel">
         <div class="panel-header">
           <h2>Vendor compliance snapshot</h2>
-          <p>Cisco Meraki vs ERC Cradlepoint within the selected region.</p>
+          <p>Separate Cisco and Ericsson scorecards that respect the active drill-down.</p>
         </div>
-        <div class="vendor-chips" id="vendorChips"></div>
+        <div class="vendor-scorecards" id="vendorScorecards"></div>
         <div class="site-list">
           <div class="site-header">
             <span>Sites by vendor</span>
