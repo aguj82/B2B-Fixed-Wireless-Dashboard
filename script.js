@@ -5,48 +5,6 @@ const TARGETS = {
   latencyP95: 80,
 };
 
-function formatCarrierKpiLabel(metricIndex, value) {
-  if (metricIndex === 2) return `${value.toFixed(0)} ms`;
-  const decimals = metricIndex === 0 || metricIndex === 1 ? 2 : 0;
-  return `${value.toFixed(decimals)}%`;
-}
-
-const carrierValueLabelsPlugin = {
-  id: "carrierValueLabels",
-  afterDatasetsDraw(chart, args, pluginOptions) {
-    if (!pluginOptions) return;
-
-    const { ctx } = chart;
-    const options = pluginOptions || {};
-    const fontSize = options.fontSize || 11;
-    const fontWeight = options.fontWeight || "600";
-    const fontFamily = options.fontFamily || "Inter, system-ui, sans-serif";
-    const color = options.color || "#fff";
-
-    ctx.save();
-    ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
-    ctx.fillStyle = color;
-
-    chart.data.datasets.forEach((dataset, datasetIndex) => {
-      const meta = chart.getDatasetMeta(datasetIndex);
-      meta.data.forEach((element, index) => {
-        const value = dataset.data[index];
-        if (value === null || value === undefined || Number.isNaN(value)) return;
-
-        const { x, y } = element.tooltipPosition();
-        const label = formatCarrierKpiLabel(index, value);
-        ctx.fillText(label, x, y - 6);
-      });
-    });
-
-    ctx.restore();
-  },
-};
-
-Chart.register(carrierValueLabelsPlugin);
-
 const customers = [
   {
     name: "Acme Logistics",
@@ -1313,11 +1271,6 @@ function buildCarrierChart(product) {
               return `${ctx.dataset.label}: ${ctx.formattedValue}${unit}`;
             },
           },
-        },
-        carrierValueLabels: {
-          color: "#fff",
-          fontSize: 11,
-          fontWeight: "700",
         },
       },
       scales: {
