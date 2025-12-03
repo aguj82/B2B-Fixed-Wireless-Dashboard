@@ -1383,48 +1383,29 @@ function buildCustomerParetoChart(product) {
   });
 }
 
-  function renderCustomerScorecards(product) {
-    const container = document.getElementById("customerScorecards");
-    if (!container) return;
-    container.innerHTML = "";
-    product.customers.forEach((cust) => {
-      const statusClass = cust.status === "improved" ? "good" : cust.status === "steady" ? "warn" : "bad";
-      const trendIcon = cust.status === "improved" ? "↑" : cust.status === "steady" ? "–" : "↓";
-      const trendLabel = cust.status === "improved" ? "Improving" : cust.status === "steady" ? "Steady" : "Declining";
-      const card = document.createElement("div");
-      card.className = "customer-card";
-      card.innerHTML = `
-        <div class="customer-card-header">
-          <h4>${cust.name}</h4>
-          <span class="status-pill ${statusClass}" title="${trendLabel}">${trendIcon}</span>
-        </div>
-        <div class="customer-metrics">
-          ${renderCustomerMetric("Availability", `${cust.availability.toFixed(2)}%`, metricStatus(cust.availability, "availability"), trendIcon, trendLabel)}
-          ${renderCustomerMetric("Loss p95", `${cust.lossP95.toFixed(2)}%`, metricStatus(cust.lossP95, "loss"), trendIcon, trendLabel)}
-          ${renderCustomerMetric("Latency p95", `${cust.latencyP95.toFixed(0)} ms`, metricStatus(cust.latencyP95, "latency"), trendIcon, trendLabel)}
-          ${renderCustomerMetric("SLA within", `${cust.slaWithin.toFixed(0)}%`, productStatusClass(cust.slaWithin, "slaWithin"), trendIcon, trendLabel)}
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  function renderCustomerMetric(label, valueText, status, trendIcon, trendLabel) {
-    const statusLetter = status === "good" ? "G" : status === "warn" ? "Y" : "R";
-    const statusTitle = status === "good" ? "On target" : status === "warn" ? "At risk" : "Breaching";
-    return `
-      <div class="customer-metric ${status}">
-        <div class="metric-title">
-          <span>${label}</span>
-          <span class="trend-icon ${status}" title="${trendLabel}">${trendIcon}</span>
-        </div>
-        <div class="metric-value">
-          <span class="metric-flag ${status}" title="${statusTitle}">${statusLetter}</span>
-          <strong>${valueText}</strong>
-        </div>
+function renderCustomerScorecards(product) {
+  const container = document.getElementById("customerScorecards");
+  if (!container) return;
+  container.innerHTML = "";
+  product.customers.forEach((cust) => {
+    const statusClass = cust.status === "improved" ? "good" : cust.status === "steady" ? "warn" : "bad";
+    const card = document.createElement("div");
+    card.className = "customer-card";
+    card.innerHTML = `
+      <div class="customer-card-header">
+        <h4>${cust.name}</h4>
+        <span class="status-pill ${statusClass}">${cust.status}</span>
+      </div>
+      <div class="customer-metrics">
+        <div><span>Availability</span><strong>${cust.availability.toFixed(2)}%</strong></div>
+        <div><span>Loss p95</span><strong>${cust.lossP95.toFixed(2)}%</strong></div>
+        <div><span>Latency p95</span><strong>${cust.latencyP95.toFixed(0)} ms</strong></div>
+        <div><span>SLA within</span><strong>${cust.slaWithin.toFixed(0)}%</strong></div>
       </div>
     `;
-  }
+    container.appendChild(card);
+  });
+}
 
 function renderProductRegions(product) {
   const container = document.getElementById("productRegionCards");
