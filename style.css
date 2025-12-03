@@ -576,6 +576,18 @@ body {
   color: var(--text-main);
 }
 
+.metric-line strong.good {
+  color: var(--good);
+}
+
+.metric-line strong.warn {
+  color: var(--warn);
+}
+
+.metric-line strong.bad {
+  color: var(--bad);
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;

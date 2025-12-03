@@ -548,6 +548,18 @@ function renderVendorScorecards(region, technology, site, selectedVendor, onClic
     const unavailable = scoped.length === 0;
     const status = unavailable ? "na" : slaStatus(summary);
     const statusText = unavailable ? "Not Available" : regionStatusText(summary);
+    const metrics = [
+      { label: "Availability", key: "availability" },
+      { label: "Packet loss p95", key: "lossP95" },
+      { label: "Latency p95", key: "latencyP95" },
+    ];
+    const metricsHtml = metrics
+      .map(({ label, key }) => {
+        const value = summary[key];
+        const metricClass = unavailable ? "" : statusForMetricKey(key, value);
+        return `<div class="metric-line"><span>${label}</span><strong class="${metricClass}">${formatMetricValue(key, value)}</strong></div>`;
+      })
+      .join("");
     const card = document.createElement("div");
     const classNames = [
       "vendor-card",
@@ -562,9 +574,7 @@ function renderVendorScorecards(region, technology, site, selectedVendor, onClic
         <h4>${vendor.label} scorecard</h4>
         <span class="status-pill ${status}">${statusText}</span>
       </div>
-      <div class="metric-line"><span>Availability</span><strong>${summary.availability.toFixed(2)}%</strong></div>
-      <div class="metric-line"><span>Packet loss p95</span><strong>${summary.lossP95.toFixed(2)}%</strong></div>
-      <div class="metric-line"><span>Latency p95</span><strong>${summary.latencyP95.toFixed(0)} ms</strong></div>
+      ${metricsHtml}
     `;
     if (!unavailable) {
       card.addEventListener("click", () => onClick(vendor.id));
