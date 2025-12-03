@@ -587,6 +587,11 @@ body {
   color: var(--text-main);
 }
 
+.status-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
 .status-pill.good { background: rgba(34, 197, 94, 0.12); color: var(--good); border-color: rgba(34, 197, 94, 0.4); }
 .status-pill.warn { background: rgba(245, 158, 11, 0.12); color: var(--warn); border-color: rgba(245, 158, 11, 0.4); }
 .status-pill.bad { background: rgba(248, 113, 113, 0.12); color: var(--bad); border-color: rgba(248, 113, 113, 0.4); }
@@ -906,6 +911,18 @@ td.bad { color: var(--bad); }
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.35rem 0.5rem;
+}
+
+.customer-metrics strong.good {
+  color: var(--good);
+}
+
+.customer-metrics strong.warn {
+  color: var(--warn);
+}
+
+.customer-metrics strong.bad {
+  color: var(--bad);
 }
 
 .customer-metrics span {
