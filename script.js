@@ -499,7 +499,7 @@ function regionStatusText(summary) {
   const status = slaStatus(summary);
   if (status === "good") return "On target";
   if (status === "warn") return "At risk";
-  return "Out of SLA";
+  return "Breach";
 }
 
 function renderRegionCards(selectedRegion, vendor, technology, onClick) {
@@ -1089,7 +1089,7 @@ function renderProductCards(selectedId, onSelect) {
           <h3>${product.name}</h3>
           <p class="caption">Today</p>
         </div>
-        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Out of SLA"}</span>
+        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Breach"}</span>
       </div>
       <div class="product-metrics">
         <div><span>Availability</span><strong>${product.availability.toFixed(2)}%</strong></div>
@@ -1387,7 +1387,7 @@ function renderProductRegions(product) {
     card.innerHTML = `
       <div class="title-row">
         <h3>${region.charAt(0).toUpperCase() + region.slice(1)}</h3>
-        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Out of SLA"}</span>
+        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Breach"}</span>
       </div>
       <div class="metric-line"><span>Availability</span><strong>${summary.availability.toFixed(2)}%</strong></div>
       <div class="metric-line"><span>Packet loss p95</span><strong>${summary.lossP95.toFixed(2)}%</strong></div>
@@ -1413,7 +1413,7 @@ function renderProductVendors(product) {
     card.innerHTML = `
       <div class="title-row">
         <h4>${vendor.label}</h4>
-        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Out of SLA"}</span>
+        <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Breach"}</span>
       </div>
       <div class="metric-line"><span>Availability</span><strong>${summary.availability.toFixed(2)}%</strong></div>
       <div class="metric-line"><span>Packet loss p95</span><strong>${summary.lossP95.toFixed(2)}%</strong></div>
