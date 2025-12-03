@@ -1243,6 +1243,37 @@ function buildCarrierChart(product) {
     product.carriers[tech].slaWithin,
   ];
 
+  const valueLabelPlugin = {
+    id: "carrierValueLabels",
+    afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      ctx.save();
+
+      const formatValue = (value, index) => {
+        const precision = index === 2 || index === 3 ? 0 : 2;
+        const unit = index === 2 ? " ms" : "%";
+        return `${Number(value).toFixed(precision)}${unit}`;
+      };
+
+      chart.data.datasets.forEach((dataset, datasetIndex) => {
+        const meta = chart.getDatasetMeta(datasetIndex);
+        meta.data.forEach((bar, index) => {
+          const value = dataset.data[index];
+          if (value === null || value === undefined) return;
+
+          const { x, y } = bar.tooltipPosition();
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "12px Inter, system-ui, -apple-system, sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(formatValue(value, index), x, y - 8);
+        });
+      });
+
+      ctx.restore();
+    },
+  };
+
   if (carrierChart) carrierChart.destroy();
   carrierChart = new Chart(canvas, {
     type: "bar",
@@ -1261,6 +1292,7 @@ function buildCarrierChart(product) {
         },
       ],
     },
+    plugins: [valueLabelPlugin],
     options: {
       plugins: {
         legend: { labels: { color: "#cbd5f5" } },
