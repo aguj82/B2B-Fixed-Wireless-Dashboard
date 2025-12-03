@@ -157,7 +157,7 @@ const PRODUCTS = [
       { name: "Production house", slaWithin: 84, availability: 99.18, lossP95: 0.62, latencyP95: 86, status: "steady" },
       { name: "Manufacturer", slaWithin: 83, availability: 99.14, lossP95: 0.64, latencyP95: 87, status: "steady" },
       { name: "Public agency", slaWithin: 86, availability: 99.26, lossP95: 0.58, latencyP95: 84, status: "improved" },
-      { name: "Collage", slaWithin: 82, availability: 99.1, lossP95: 0.66, latencyP95: 89, status: "failing" },
+      { name: "College", slaWithin: 82, availability: 99.1, lossP95: 0.66, latencyP95: 89, status: "failing" },
       { name: "School", slaWithin: 87, availability: 99.28, lossP95: 0.56, latencyP95: 83, status: "improved" },
     ],
     regions: {
@@ -202,7 +202,7 @@ const PRODUCTS = [
       { name: "Production house", slaWithin: 91, availability: 99.46, lossP95: 0.4, latencyP95: 74, status: "improved" },
       { name: "Manufacturer", slaWithin: 89, availability: 99.4, lossP95: 0.42, latencyP95: 76, status: "steady" },
       { name: "Public agency", slaWithin: 93, availability: 99.52, lossP95: 0.36, latencyP95: 72, status: "improved" },
-      { name: "Collage", slaWithin: 87, availability: 99.34, lossP95: 0.46, latencyP95: 79, status: "failing" },
+      { name: "College", slaWithin: 87, availability: 99.34, lossP95: 0.46, latencyP95: 79, status: "failing" },
       { name: "School", slaWithin: 90, availability: 99.44, lossP95: 0.4, latencyP95: 74, status: "steady" },
     ],
     regions: {
@@ -247,7 +247,7 @@ const PRODUCTS = [
       { name: "Production house", slaWithin: 89, availability: 99.4, lossP95: 0.44, latencyP95: 75, status: "steady" },
       { name: "Manufacturer", slaWithin: 87, availability: 99.32, lossP95: 0.48, latencyP95: 77, status: "failing" },
       { name: "Public agency", slaWithin: 92, availability: 99.54, lossP95: 0.36, latencyP95: 71, status: "improved" },
-      { name: "Collage", slaWithin: 86, availability: 99.3, lossP95: 0.5, latencyP95: 79, status: "failing" },
+      { name: "College", slaWithin: 86, availability: 99.3, lossP95: 0.5, latencyP95: 79, status: "failing" },
       { name: "School", slaWithin: 88, availability: 99.36, lossP95: 0.46, latencyP95: 75, status: "steady" },
     ],
     regions: {
@@ -292,7 +292,7 @@ const PRODUCTS = [
       { name: "Production house", slaWithin: 82, availability: 99.16, lossP95: 0.62, latencyP95: 88, status: "steady" },
       { name: "Manufacturer", slaWithin: 81, availability: 99.12, lossP95: 0.64, latencyP95: 89, status: "steady" },
       { name: "Public agency", slaWithin: 85, availability: 99.22, lossP95: 0.58, latencyP95: 84, status: "improved" },
-      { name: "Collage", slaWithin: 79, availability: 99.08, lossP95: 0.68, latencyP95: 92, status: "failing" },
+      { name: "College", slaWithin: 79, availability: 99.08, lossP95: 0.68, latencyP95: 92, status: "failing" },
       { name: "School", slaWithin: 84, availability: 99.18, lossP95: 0.6, latencyP95: 86, status: "steady" },
     ],
     regions: {
@@ -306,6 +306,13 @@ const PRODUCTS = [
     },
   },
 ];
+
+const PRODUCT_CUSTOMER_MAP = {
+  smb: ["Coffee chain", "Retail chain"],
+  enterprise: ["Production house", "Manufacturer", "Bank", "Healthcare provider"],
+  government: ["Public agency"],
+  education: ["College", "School"],
+};
 
 const TECH_ADJUSTMENTS = {
   all: { availability: 0, lossP95: 0, latencyP95: 0 },
@@ -1387,6 +1394,7 @@ function renderCustomerScorecards(product) {
   const container = document.getElementById("customerScorecards");
   if (!container) return;
   container.innerHTML = "";
+  const linkedCustomers = new Set(PRODUCT_CUSTOMER_MAP[product.id] || []);
   product.customers.forEach((cust) => {
     const statusClass = cust.status === "improved" ? "good" : cust.status === "steady" ? "warn" : "bad";
     const statusIcon = statusClass === "good" ? "▲" : statusClass === "warn" ? "–" : "▼";
@@ -1394,11 +1402,15 @@ function renderCustomerScorecards(product) {
     const lossStatus = metricStatus(cust.lossP95, "loss");
     const latencyStatus = metricStatus(cust.latencyP95, "latency");
     const slaStatusClass = productStatusClass(cust.slaWithin, "slaWithin");
+    const isLinkedToProduct = linkedCustomers.has(cust.name);
     const card = document.createElement("div");
-    card.className = "customer-card";
+    card.className = `customer-card ${isLinkedToProduct ? "highlighted" : ""}`;
     card.innerHTML = `
       <div class="customer-card-header">
-        <h4>${cust.name}</h4>
+        <div class="customer-name-group">
+          <h4>${cust.name}</h4>
+          ${isLinkedToProduct ? "<span class=\"customer-product-tag\">Mapped to product</span>" : ""}
+        </div>
         <span class="status-pill ${statusClass}" aria-label="${cust.status} trend" title="${cust.status}">
           <span class="status-icon">${statusIcon}</span>
         </span>

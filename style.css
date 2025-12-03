@@ -901,10 +901,32 @@ td.bad { color: var(--bad); }
   gap: 0.45rem;
 }
 
+.customer-card.highlighted {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.4);
+  background: rgba(124, 58, 237, 0.08);
+}
+
 .customer-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.customer-name-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.customer-product-tag {
+  border: 1px solid rgba(124, 58, 237, 0.45);
+  color: #d9c7ff;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  background: rgba(124, 58, 237, 0.18);
 }
 
 .customer-metrics {
