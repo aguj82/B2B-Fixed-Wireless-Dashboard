@@ -1389,18 +1389,25 @@ function renderCustomerScorecards(product) {
   container.innerHTML = "";
   product.customers.forEach((cust) => {
     const statusClass = cust.status === "improved" ? "good" : cust.status === "steady" ? "warn" : "bad";
+    const statusIcon = statusClass === "good" ? "▲" : statusClass === "warn" ? "–" : "▼";
+    const availabilityStatus = metricStatus(cust.availability, "availability");
+    const lossStatus = metricStatus(cust.lossP95, "loss");
+    const latencyStatus = metricStatus(cust.latencyP95, "latency");
+    const slaStatusClass = productStatusClass(cust.slaWithin, "slaWithin");
     const card = document.createElement("div");
     card.className = "customer-card";
     card.innerHTML = `
       <div class="customer-card-header">
         <h4>${cust.name}</h4>
-        <span class="status-pill ${statusClass}">${cust.status}</span>
+        <span class="status-pill ${statusClass}" aria-label="${cust.status} trend" title="${cust.status}">
+          <span class="status-icon">${statusIcon}</span>
+        </span>
       </div>
       <div class="customer-metrics">
-        <div><span>Availability</span><strong>${cust.availability.toFixed(2)}%</strong></div>
-        <div><span>Loss p95</span><strong>${cust.lossP95.toFixed(2)}%</strong></div>
-        <div><span>Latency p95</span><strong>${cust.latencyP95.toFixed(0)} ms</strong></div>
-        <div><span>SLA within</span><strong>${cust.slaWithin.toFixed(0)}%</strong></div>
+        <div><span>Availability</span><strong class="${availabilityStatus}">${cust.availability.toFixed(2)}%</strong></div>
+        <div><span>Loss p95</span><strong class="${lossStatus}">${cust.lossP95.toFixed(2)}%</strong></div>
+        <div><span>Latency p95</span><strong class="${latencyStatus}">${cust.latencyP95.toFixed(0)} ms</strong></div>
+        <div><span>SLA within</span><strong class="${slaStatusClass}">${cust.slaWithin.toFixed(0)}%</strong></div>
       </div>
     `;
     container.appendChild(card);
