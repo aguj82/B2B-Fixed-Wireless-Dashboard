@@ -902,85 +902,17 @@ td.bad { color: var(--bad); }
   align-items: center;
 }
 
-  .customer-metrics {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem 0.6rem;
-  }
+.customer-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.5rem;
+}
 
-  .customer-metrics span {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    display: block;
-  }
-
-  .customer-metric {
-    border: 1px solid var(--border);
-    border-radius: 0.65rem;
-    padding: 0.45rem 0.5rem;
-    background: rgba(255, 255, 255, 0.02);
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  .customer-metric .metric-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-
-  .metric-value {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .metric-flag {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.35rem;
-    height: 1.35rem;
-    border-radius: 0.45rem;
-    font-weight: 700;
-    font-size: 0.72rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .metric-flag.good,
-  .trend-icon.good {
-    color: var(--good);
-    border-color: rgba(34, 197, 94, 0.45);
-    background: rgba(34, 197, 94, 0.1);
-  }
-
-  .metric-flag.warn,
-  .trend-icon.warn {
-    color: var(--warn);
-    border-color: rgba(245, 158, 11, 0.45);
-    background: rgba(245, 158, 11, 0.12);
-  }
-
-  .metric-flag.bad,
-  .trend-icon.bad {
-    color: var(--bad);
-    border-color: rgba(248, 113, 113, 0.45);
-    background: rgba(248, 113, 113, 0.12);
-  }
-
-  .trend-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.2rem;
-    height: 1.2rem;
-    border-radius: 0.35rem;
-    font-size: 0.85rem;
-    border: 1px solid transparent;
-  }
+.customer-metrics span {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  display: block;
+}
 
 .product-region-cards {
   display: grid;
