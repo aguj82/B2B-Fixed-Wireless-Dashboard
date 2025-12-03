@@ -807,8 +807,11 @@ function renderTopCustomersChart(region, vendor, site, technology) {
     item.innerHTML = `
       <span class="swatch" style="background:${palette[idx % palette.length]}"></span>
       <div>
-        <p>${customer.name}</p>
-        <small>${usageLabel} • ${customer.site}</small>
+        <div class="donut-legend-row">
+          <p>${customer.name}</p>
+          <span class="donut-legend-usage">${usageLabel}</span>
+        </div>
+        <small>${customer.site}</small>
       </div>
     `;
     legend.appendChild(item);

@@ -468,32 +468,45 @@ body {
   min-width: 240px;
 }
 
-.donut-legend-item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.55rem;
-  padding: 0.55rem 0.65rem;
-  border: 1px solid var(--border);
-  border-radius: 0.8rem;
-  background: rgba(255, 255, 255, 0.02);
+.donut-legend-item { 
+  display: grid; 
+  grid-template-columns: auto 1fr; 
+  gap: 0.55rem; 
+  padding: 0.55rem 0.65rem; 
+  border: 1px solid var(--border); 
+  border-radius: 0.8rem; 
+  background: rgba(255, 255, 255, 0.02); 
+} 
+
+.donut-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
-.donut-legend-item .swatch {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
+.donut-legend-item .swatch { 
+  width: 12px; 
+  height: 12px; 
+  border-radius: 999px; 
   margin-top: 0.25rem;
 }
 
-.donut-legend-item p {
-  font-size: 0.85rem;
-  margin: 0;
+.donut-legend-item p { 
+  font-size: 0.85rem; 
+  margin: 0; 
+} 
+
+.donut-legend-usage {
+  font-size: 0.82rem;
+  color: #e2e8f0;
+  font-weight: 700;
 }
 
-.donut-legend-item small {
-  display: block;
-  color: var(--text-muted);
-  margin-top: 0.15rem;
+.donut-legend-item small { 
+  display: block; 
+  color: var(--text-muted); 
+  margin-top: 0.15rem; 
   font-size: 0.72rem;
 }
 
