@@ -538,19 +538,32 @@ function renderVendorScorecards(region, technology, site, selectedVendor, onClic
   vendors.forEach((vendor) => {
     const scoped = selectionFilters(region, vendor.id, site, technology);
     const summary = averageMetrics(scoped);
-    const status = slaStatus(summary);
+    const unavailable = scoped.length === 0;
+    const status = unavailable ? "na" : slaStatus(summary);
+    const statusText = unavailable ? "Not Available" : regionStatusText(summary);
     const card = document.createElement("div");
-    card.className = `vendor-card ${selectedVendor === vendor.id ? "active" : ""}`;
+    const classNames = [
+      "vendor-card",
+      selectedVendor === vendor.id ? "active" : "",
+      unavailable ? "unavailable" : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+    card.className = classNames;
     card.innerHTML = `
       <div class="title-row">
         <h4>${vendor.label} scorecard</h4>
-        <span class="status-pill ${status}">${regionStatusText(summary)}</span>
+        <span class="status-pill ${status}">${statusText}</span>
       </div>
       <div class="metric-line"><span>Availability</span><strong>${summary.availability.toFixed(2)}%</strong></div>
       <div class="metric-line"><span>Packet loss p95</span><strong>${summary.lossP95.toFixed(2)}%</strong></div>
       <div class="metric-line"><span>Latency p95</span><strong>${summary.latencyP95.toFixed(0)} ms</strong></div>
     `;
-    card.addEventListener("click", () => onClick(vendor.id));
+    if (!unavailable) {
+      card.addEventListener("click", () => onClick(vendor.id));
+    } else {
+      card.setAttribute("aria-disabled", "true");
+    }
     container.appendChild(card);
   });
 }
