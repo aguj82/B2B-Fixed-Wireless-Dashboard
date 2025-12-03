@@ -954,6 +954,43 @@ td.bad { color: var(--bad); }
   background: rgba(124, 58, 237, 0.18);
 }
 
+.customer-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.sla-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.68rem;
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text-main);
+}
+
+.sla-pill.good {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--good);
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.sla-pill.warn {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warn);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.sla-pill.bad {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--bad);
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
 .customer-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

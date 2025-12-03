@@ -1420,6 +1420,7 @@ function renderCustomerScorecards(product) {
     const lossStatus = metricStatus(cust.lossP95, "loss");
     const latencyStatus = metricStatus(cust.latencyP95, "latency");
     const slaStatusClass = productStatusClass(cust.slaWithin, "slaWithin");
+    const slaLabel = slaStatusClass === "good" ? "On Target" : slaStatusClass === "warn" ? "At Risk" : "Breaching";
     const isLinkedToProduct = linkedCustomers.has(cust.name);
     const card = document.createElement("div");
     card.className = `customer-card ${isLinkedToProduct ? "highlighted" : ""}`;
@@ -1429,9 +1430,12 @@ function renderCustomerScorecards(product) {
           <h4>${cust.name}</h4>
           ${isLinkedToProduct ? "<span class=\"customer-product-tag\">Mapped to product</span>" : ""}
         </div>
-        <span class="status-pill ${statusClass}" aria-label="${cust.status} trend" title="${cust.status}">
-          <span class="status-icon">${statusIcon}</span>
-        </span>
+        <div class="customer-badges" aria-label="Customer SLA and trend status">
+          <span class="sla-pill ${slaStatusClass}" title="SLA ${slaLabel}">${slaLabel}</span>
+          <span class="status-pill ${statusClass}" aria-label="${cust.status} trend" title="${cust.status}">
+            <span class="status-icon">${statusIcon}</span>
+          </span>
+        </div>
       </div>
       <div class="customer-metrics">
         <div><span>Availability</span><strong class="${availabilityStatus}">${cust.availability.toFixed(2)}%</strong></div>
