@@ -1408,7 +1408,12 @@ function renderCustomerScorecards(product) {
   if (!container) return;
   container.innerHTML = "";
   const linkedCustomers = new Set(PRODUCT_CUSTOMER_MAP[product.id] || []);
-  product.customers.forEach((cust) => {
+  const scopedCustomers =
+    linkedCustomers.size === 0
+      ? product.customers
+      : product.customers.filter((cust) => linkedCustomers.has(cust.name));
+
+  scopedCustomers.forEach((cust) => {
     const statusClass = cust.status === "improved" ? "good" : cust.status === "steady" ? "warn" : "bad";
     const statusIcon = statusClass === "good" ? "▲" : statusClass === "warn" ? "–" : "▼";
     const availabilityStatus = metricStatus(cust.availability, "availability");
