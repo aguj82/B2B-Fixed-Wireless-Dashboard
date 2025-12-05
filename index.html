@@ -127,22 +127,6 @@
     </section>
 
     <section class="panel">
-      <div class="panel-header inline">
-        <div>
-          <h2>Top 5 customers by data usage</h2>
-          <p>Usage converted to GB for the active region, vendor and site filters.</p>
-        </div>
-        <div class="pill">Donut shows share by customer</div>
-      </div>
-      <div class="donut-wrapper">
-        <div class="donut-chart">
-          <canvas id="topCustomersChart" aria-label="Top 5 customers usage donut"></canvas>
-        </div>
-        <div class="donut-legend" id="topCustomersLegend"></div>
-      </div>
-    </section>
-
-    <section class="panel">
       <div class="panel-header">
         <h2>Customer SLA scorecard</h2>
         <p>Availability, packet loss p95 and latency p95 are conditionally formatted for the active drill-down.</p>
@@ -164,6 +148,22 @@
           </thead>
           <tbody id="customerTableBody"></tbody>
         </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header inline">
+        <div>
+          <h2>Top 5 customers by data usage</h2>
+          <p>Usage converted to GB for the active region, vendor and site filters.</p>
+        </div>
+        <div class="pill">Donut shows share by customer</div>
+      </div>
+      <div class="donut-wrapper">
+        <div class="donut-chart">
+          <canvas id="topCustomersChart" aria-label="Top 5 customers usage donut"></canvas>
+        </div>
+        <div class="donut-legend" id="topCustomersLegend"></div>
       </div>
     </section>
   </main>
