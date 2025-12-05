@@ -852,6 +852,63 @@ td.bad { color: var(--bad); }
   font-size: 0.72rem;
 }
 
+.heatmap-annotations {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.heatmap-note {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.heatmap-note-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.heatmap-note-text strong {
+  font-weight: 600;
+}
+
+.heatmap-note-text small {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+.heatmap-note-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.heatmap-note-actions button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.55rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.heatmap-note-actions button:hover {
+  background: rgba(124, 58, 237, 0.18);
+  border-color: rgba(124, 58, 237, 0.4);
+}
+
+.heatmap-note-actions button.delete {
+  color: #fca5a5;
+}
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

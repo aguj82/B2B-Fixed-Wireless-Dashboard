@@ -1798,6 +1798,9 @@ const heatmapData = [
   { ap: "AP-25 (DC)", values: [71, 66, 61, 55, 57, 68, 79, 86, 90, 88, 77, 69] },
 ];
 
+let heatmapAnnotations = [];
+let heatmapEditingId = null;
+
 function renderHeatmap() {
   const container = document.getElementById("accessHeatmap");
   if (!container) return;
@@ -1839,13 +1842,107 @@ function initHeatmapAnnotations() {
   const input = document.getElementById("heatmapNote");
   const button = document.getElementById("applyHeatmapNote");
   const status = document.getElementById("heatmapNoteStatus");
-  if (!input || !button || !status) return;
+  const list = document.getElementById("heatmapNotesList");
+  if (!input || !button || !status || !list) return;
+
+  const timeFormatter = new Intl.DateTimeFormat("en", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  const renderNotes = () => {
+    list.innerHTML = "";
+
+    if (!heatmapAnnotations.length) {
+      const empty = document.createElement("div");
+      empty.className = "heatmap-note heatmap-note-empty";
+      empty.textContent = "No annotations yet. Add a note to explain heatmap changes.";
+      list.appendChild(empty);
+      return;
+    }
+
+    heatmapAnnotations.forEach((note) => {
+      const noteEl = document.createElement("div");
+      noteEl.className = "heatmap-note";
+
+      const text = document.createElement("div");
+      text.className = "heatmap-note-text";
+      const strong = document.createElement("strong");
+      strong.textContent = note.text;
+      const timestamp = document.createElement("small");
+      timestamp.textContent = `Captured ${timeFormatter.format(new Date(note.updatedAt || note.createdAt))}`;
+      text.appendChild(strong);
+      text.appendChild(timestamp);
+
+      const actions = document.createElement("div");
+      actions.className = "heatmap-note-actions";
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.textContent = "Edit";
+      editBtn.addEventListener("click", () => {
+        heatmapEditingId = note.id;
+        input.value = note.text;
+        button.textContent = "Save annotation";
+        status.textContent = "Editing annotation…";
+        input.focus();
+      });
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.classList.add("delete");
+      deleteBtn.textContent = "Remove";
+      deleteBtn.addEventListener("click", () => {
+        heatmapAnnotations = heatmapAnnotations.filter((item) => item.id !== note.id);
+        if (heatmapEditingId === note.id) {
+          heatmapEditingId = null;
+          input.value = "";
+          button.textContent = "Apply note";
+        }
+        status.textContent = heatmapAnnotations.length
+          ? "Annotation removed."
+          : "No recent annotations.";
+        renderNotes();
+      });
+
+      actions.appendChild(editBtn);
+      actions.appendChild(deleteBtn);
+
+      noteEl.appendChild(text);
+      noteEl.appendChild(actions);
+      list.appendChild(noteEl);
+    });
+  };
 
   button.addEventListener("click", () => {
-    const note = input.value.trim();
-    status.textContent = note ? `Annotation applied: ${note}` : "No recent annotations.";
-    if (note) input.value = "";
+    const noteText = input.value.trim();
+    if (!noteText) {
+      status.textContent = "Enter an annotation before applying.";
+      return;
+    }
+
+    if (heatmapEditingId) {
+      const target = heatmapAnnotations.find((item) => item.id === heatmapEditingId);
+      if (target) {
+        target.text = noteText;
+        target.updatedAt = Date.now();
+      }
+      status.textContent = "Annotation updated.";
+    } else {
+      heatmapAnnotations.unshift({
+        id: crypto.randomUUID ? crypto.randomUUID() : `note-${Date.now()}-${Math.random()}`,
+        text: noteText,
+        createdAt: Date.now(),
+      });
+      status.textContent = `Annotation added: ${noteText}`;
+    }
+
+    heatmapEditingId = null;
+    input.value = "";
+    button.textContent = "Apply note";
+    renderNotes();
   });
+
+  renderNotes();
 }
 
 function initOperationsDashboard() {
