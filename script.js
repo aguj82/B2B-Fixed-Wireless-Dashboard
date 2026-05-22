@@ -6,6 +6,7 @@ const TARGETS = {
 };
 
 const customers = [
+  // ── Enterprise (Cisco / Ericsson) ──────────────────────────────────────────
   {
     name: "Acme Logistics",
     region: "west",
@@ -23,9 +24,9 @@ const customers = [
     site: "Portland Edge",
     vendor: "ericsson",
     technology: "4g",
-    availability: 99.18,
-    lossP95: 0.7,
-    latencyP95: 82,
+    availability: 99.61,
+    lossP95: 0.38,
+    latencyP95: 74,
     usageTb: 63.8,
   },
   {
@@ -40,14 +41,15 @@ const customers = [
     usageTb: 57.1,
   },
   {
+    // ⚠ WARN – central / Ericsson 4G — good drill-down target
     name: "NorthSteel Manufacturing",
     region: "central",
     site: "Kansas City",
     vendor: "ericsson",
     technology: "4g",
-    availability: 98.94,
-    lossP95: 1.1,
-    latencyP95: 95,
+    availability: 99.31,
+    lossP95: 0.58,
+    latencyP95: 85,
     usageTb: 38.4,
   },
   {
@@ -62,6 +64,7 @@ const customers = [
     usageTb: 71.9,
   },
   {
+    // 🔴 BREACH – east / Ericsson 4G — primary alert for ops team
     name: "MetroPublic Services",
     region: "east",
     site: "Richmond",
@@ -78,9 +81,9 @@ const customers = [
     site: "San Jose",
     vendor: "cisco",
     technology: "4g",
-    availability: 99.4,
-    lossP95: 0.55,
-    latencyP95: 75,
+    availability: 99.58,
+    lossP95: 0.34,
+    latencyP95: 72,
     usageTb: 51.0,
   },
   {
@@ -89,9 +92,9 @@ const customers = [
     site: "Boston",
     vendor: "cisco",
     technology: "5g",
-    availability: 99.27,
-    lossP95: 0.5,
-    latencyP95: 78,
+    availability: 99.62,
+    lossP95: 0.41,
+    latencyP95: 71,
     usageTb: 46.3,
   },
   {
@@ -100,74 +103,198 @@ const customers = [
     site: "St. Louis",
     vendor: "ericsson",
     technology: "5g",
-    availability: 99.4,
-    lossP95: 0.4,
-    latencyP95: 70,
+    availability: 99.65,
+    lossP95: 0.33,
+    latencyP95: 64,
     usageTb: 34.2,
+  },
+  // ── Residential / SMB (Inseego 5G) ────────────────────────────────────────
+  {
+    name: "Pacific Connect Co.",
+    region: "west",
+    site: "LA Metro",
+    vendor: "inseego",
+    technology: "5g",
+    availability: 99.42,
+    lossP95: 0.49,
+    latencyP95: 76,
+    usageTb: 18.6,
+  },
+  {
+    name: "SunCoast Shops",
+    region: "west",
+    site: "San Diego Edge",
+    vendor: "inseego",
+    technology: "5g",
+    availability: 99.54,
+    lossP95: 0.42,
+    latencyP95: 72,
+    usageTb: 12.3,
+  },
+  {
+    // ⚠ WARN – rural central Inseego coverage gap
+    name: "Plains Rural Network",
+    region: "central",
+    site: "Omaha Hub",
+    vendor: "inseego",
+    technology: "5g",
+    availability: 99.11,
+    lossP95: 0.66,
+    latencyP95: 87,
+    usageTb: 9.8,
+  },
+  {
+    name: "NewWave Residences",
+    region: "east",
+    site: "Charlotte",
+    vendor: "inseego",
+    technology: "5g",
+    availability: 99.38,
+    lossP95: 0.51,
+    latencyP95: 79,
+    usageTb: 14.1,
+  },
+  {
+    name: "Coastal SMB Group",
+    region: "east",
+    site: "Miami East",
+    vendor: "inseego",
+    technology: "5g",
+    availability: 99.58,
+    lossP95: 0.37,
+    latencyP95: 69,
+    usageTb: 11.7,
+  },
+  // ── SuperBroadband (5G + Satellite) ───────────────────────────────────────
+  // vendor = 5G equipment vendor; satelliteVendor = satellite leg vendor
+  {
+    name: "MedGroup Hospitals",
+    region: "west",
+    site: "Phoenix Hub",
+    vendor: "cisco",
+    satelliteVendor: "starlink",
+    technology: "hybrid",
+    availability: 99.83,
+    lossP95: 0.18,
+    latencyP95: 52,
+    usageTb: 88.4,
+  },
+  {
+    name: "FinanceNet Corp",
+    region: "east",
+    site: "New York DC",
+    vendor: "ericsson",
+    satelliteVendor: "starlink",
+    technology: "hybrid",
+    availability: 99.79,
+    lossP95: 0.21,
+    latencyP95: 54,
+    usageTb: 112.3,
+  },
+  {
+    name: "RetailCore Network",
+    region: "central",
+    site: "Dallas Prime",
+    vendor: "cisco",
+    satelliteVendor: "starlink",
+    technology: "hybrid",
+    availability: 99.77,
+    lossP95: 0.22,
+    latencyP95: 57,
+    usageTb: 95.1,
+  },
+  {
+    name: "EnergyGrid Solutions",
+    region: "west",
+    site: "Sacramento",
+    vendor: "ericsson",
+    satelliteVendor: "starlink",
+    technology: "hybrid",
+    availability: 99.81,
+    lossP95: 0.17,
+    latencyP95: 50,
+    usageTb: 76.8,
+  },
+  {
+    // ⚠ WARN – just below 99.7% SuperBroadband SLA commitment
+    name: "MultiSite Logistics",
+    region: "east",
+    site: "Atlanta Hub",
+    vendor: "cisco",
+    satelliteVendor: "starlink",
+    technology: "hybrid",
+    availability: 99.48,
+    lossP95: 0.38,
+    latencyP95: 78,
+    usageTb: 68.2,
   },
 ];
 
 const REGION_BASELINES = {
-  west: { availability: 99.45, lossP95: 0.46, latencyP95: 72 },
-  central: { availability: 99.05, lossP95: 0.7, latencyP95: 86 },
-  east: { availability: 99.2, lossP95: 0.55, latencyP95: 76 },
+  west: { availability: 99.60, lossP95: 0.38, latencyP95: 68 },
+  central: { availability: 99.38, lossP95: 0.52, latencyP95: 78 },
+  east: { availability: 99.48, lossP95: 0.44, latencyP95: 72 },
 };
 
 const TECH_LABELS = {
   all: "All access",
   "4g": "4G/LTE",
   "5g": "5G",
+  "hybrid": "Hybrid Access",
 };
 
 const VENDOR_LABELS = {
   cisco: "Cisco",
   ericsson: "Ericsson",
+  inseego: "Inseego",
+  starlink: "Starlink",
 };
 
 const PRODUCTS = [
   {
     id: "smb",
     name: "Small/Medium Business",
-    availability: 99.22,
-    lossP95: 0.58,
-    latencyP95: 82,
-    slaWithin: 86,
+    availability: 99.51,
+    lossP95: 0.43,
+    latencyP95: 75,
+    slaWithin: 92,
     monthly: [
-      { month: "Jan", availability: { p50: 99.1, p95: 99.6, mean: 99.25 }, loss: { p50: 0.55, p95: 0.9, mean: 0.62 }, latency: { p50: 78, p95: 96, mean: 84 } },
-      { month: "Feb", availability: { p50: 99.12, p95: 99.62, mean: 99.2 }, loss: { p50: 0.52, p95: 0.86, mean: 0.6 }, latency: { p50: 77, p95: 95, mean: 83 } },
-      { month: "Mar", availability: { p50: 99.08, p95: 99.58, mean: 99.18 }, loss: { p50: 0.58, p95: 0.94, mean: 0.65 }, latency: { p50: 80, p95: 98, mean: 85 } },
-      { month: "Apr", availability: { p50: 99.2, p95: 99.64, mean: 99.28 }, loss: { p50: 0.5, p95: 0.88, mean: 0.58 }, latency: { p50: 79, p95: 95, mean: 83 } },
-      { month: "May", availability: { p50: 99.26, p95: 99.7, mean: 99.34 }, loss: { p50: 0.48, p95: 0.82, mean: 0.55 }, latency: { p50: 78, p95: 93, mean: 82 } },
-      { month: "Jun", availability: { p50: 99.24, p95: 99.68, mean: 99.32 }, loss: { p50: 0.5, p95: 0.86, mean: 0.56 }, latency: { p50: 77, p95: 92, mean: 81 } },
-      { month: "Jul", availability: { p50: 99.18, p95: 99.62, mean: 99.24 }, loss: { p50: 0.55, p95: 0.9, mean: 0.6 }, latency: { p50: 79, p95: 96, mean: 84 } },
-      { month: "Aug", availability: { p50: 99.16, p95: 99.6, mean: 99.22 }, loss: { p50: 0.57, p95: 0.92, mean: 0.62 }, latency: { p50: 80, p95: 97, mean: 85 } },
-      { month: "Sep", availability: { p50: 99.22, p95: 99.66, mean: 99.3 }, loss: { p50: 0.5, p95: 0.84, mean: 0.55 }, latency: { p50: 78, p95: 92, mean: 82 } },
-      { month: "Oct", availability: { p50: 99.3, p95: 99.72, mean: 99.38 }, loss: { p50: 0.46, p95: 0.8, mean: 0.52 }, latency: { p50: 76, p95: 90, mean: 80 } },
-      { month: "Nov", availability: { p50: 99.28, p95: 99.7, mean: 99.35 }, loss: { p50: 0.48, p95: 0.82, mean: 0.54 }, latency: { p50: 77, p95: 91, mean: 81 } },
+      { month: "Jan", availability: { p50: 99.38, p95: 99.72, mean: 99.48 }, loss: { p50: 0.42, p95: 0.72, mean: 0.48 }, latency: { p50: 70, p95: 88, mean: 76 } },
+      { month: "Feb", availability: { p50: 99.40, p95: 99.74, mean: 99.50 }, loss: { p50: 0.40, p95: 0.70, mean: 0.46 }, latency: { p50: 69, p95: 87, mean: 75 } },
+      { month: "Mar", availability: { p50: 99.35, p95: 99.70, mean: 99.44 }, loss: { p50: 0.46, p95: 0.76, mean: 0.52 }, latency: { p50: 72, p95: 90, mean: 78 } },
+      { month: "Apr", availability: { p50: 99.44, p95: 99.76, mean: 99.52 }, loss: { p50: 0.38, p95: 0.68, mean: 0.44 }, latency: { p50: 70, p95: 87, mean: 75 } },
+      { month: "May", availability: { p50: 99.50, p95: 99.80, mean: 99.58 }, loss: { p50: 0.36, p95: 0.64, mean: 0.42 }, latency: { p50: 68, p95: 85, mean: 74 } },
+      { month: "Jun", availability: { p50: 99.48, p95: 99.78, mean: 99.56 }, loss: { p50: 0.38, p95: 0.66, mean: 0.44 }, latency: { p50: 69, p95: 85, mean: 74 } },
+      { month: "Jul", availability: { p50: 99.42, p95: 99.74, mean: 99.50 }, loss: { p50: 0.42, p95: 0.72, mean: 0.48 }, latency: { p50: 71, p95: 88, mean: 76 } },
+      { month: "Aug", availability: { p50: 99.40, p95: 99.72, mean: 99.48 }, loss: { p50: 0.44, p95: 0.74, mean: 0.50 }, latency: { p50: 72, p95: 89, mean: 77 } },
+      { month: "Sep", availability: { p50: 99.46, p95: 99.78, mean: 99.54 }, loss: { p50: 0.38, p95: 0.66, mean: 0.44 }, latency: { p50: 70, p95: 86, mean: 75 } },
+      { month: "Oct", availability: { p50: 99.54, p95: 99.82, mean: 99.60 }, loss: { p50: 0.34, p95: 0.62, mean: 0.40 }, latency: { p50: 68, p95: 84, mean: 73 } },
+      { month: "Nov", availability: { p50: 99.52, p95: 99.80, mean: 99.58 }, loss: { p50: 0.36, p95: 0.64, mean: 0.42 }, latency: { p50: 69, p95: 85, mean: 74 } },
     ],
     carriers: {
-      "4g": { availability: 99.1, lossP95: 0.68, latencyP95: 88, slaWithin: 83 },
-      "5g": { availability: 99.34, lossP95: 0.48, latencyP95: 77, slaWithin: 89 },
+      "4g": { availability: 99.38, lossP95: 0.52, latencyP95: 80, slaWithin: 88 },
+      "5g": { availability: 99.62, lossP95: 0.34, latencyP95: 69, slaWithin: 95 },
     },
     customers: [
-      { name: "Bank", slaWithin: 82, availability: 99.12, lossP95: 0.66, latencyP95: 88, status: "improved" },
-      { name: "Healthcare provider", slaWithin: 85, availability: 99.2, lossP95: 0.6, latencyP95: 85, status: "steady" },
-      { name: "Coffee chain", slaWithin: 81, availability: 99.05, lossP95: 0.74, latencyP95: 90, status: "failing" },
-      { name: "Retail chain", slaWithin: 88, availability: 99.32, lossP95: 0.52, latencyP95: 80, status: "improved" },
-      { name: "Production house", slaWithin: 84, availability: 99.18, lossP95: 0.62, latencyP95: 86, status: "steady" },
-      { name: "Manufacturer", slaWithin: 83, availability: 99.14, lossP95: 0.64, latencyP95: 87, status: "steady" },
-      { name: "Public agency", slaWithin: 86, availability: 99.26, lossP95: 0.58, latencyP95: 84, status: "improved" },
-      { name: "College", slaWithin: 82, availability: 99.1, lossP95: 0.66, latencyP95: 89, status: "failing" },
-      { name: "School", slaWithin: 87, availability: 99.28, lossP95: 0.56, latencyP95: 83, status: "improved" },
+      { name: "Bank", slaWithin: 90, availability: 99.52, lossP95: 0.42, latencyP95: 76, status: "improved" },
+      { name: "Healthcare provider", slaWithin: 92, availability: 99.56, lossP95: 0.38, latencyP95: 74, status: "improved" },
+      { name: "Coffee chain", slaWithin: 88, availability: 99.46, lossP95: 0.48, latencyP95: 78, status: "improved" },
+      { name: "Retail chain", slaWithin: 94, availability: 99.60, lossP95: 0.36, latencyP95: 72, status: "improved" },
+      { name: "Production house", slaWithin: 91, availability: 99.54, lossP95: 0.40, latencyP95: 75, status: "improved" },
+      { name: "Manufacturer", slaWithin: 87, availability: 99.44, lossP95: 0.48, latencyP95: 79, status: "steady" },
+      { name: "Public agency", slaWithin: 93, availability: 99.62, lossP95: 0.34, latencyP95: 71, status: "improved" },
+      { name: "College", slaWithin: 89, availability: 99.48, lossP95: 0.46, latencyP95: 77, status: "steady" },
+      { name: "School", slaWithin: 93, availability: 99.60, lossP95: 0.36, latencyP95: 73, status: "improved" },
     ],
     regions: {
-      west: { availability: 99.3, lossP95: 0.52, latencyP95: 81, slaWithin: 89 },
-      central: { availability: 99.1, lossP95: 0.64, latencyP95: 86, slaWithin: 84 },
-      east: { availability: 99.2, lossP95: 0.58, latencyP95: 83, slaWithin: 87 },
+      west: { availability: 99.58, lossP95: 0.38, latencyP95: 74, slaWithin: 93 },
+      central: { availability: 99.42, lossP95: 0.48, latencyP95: 78, slaWithin: 89 },
+      east: { availability: 99.52, lossP95: 0.41, latencyP95: 76, slaWithin: 92 },
     },
     vendors: {
-      cisco: { availability: 99.34, lossP95: 0.48, latencyP95: 79, slaWithin: 90 },
-      ericsson: { availability: 99.1, lossP95: 0.66, latencyP95: 86, slaWithin: 83 },
+      cisco: { availability: 99.60, lossP95: 0.36, latencyP95: 72, slaWithin: 94 },
+      ericsson: { availability: 99.44, lossP95: 0.49, latencyP95: 78, slaWithin: 89 },
+      inseego: { availability: 99.22, lossP95: 0.61, latencyP95: 81, slaWithin: 83 },
     },
   },
   {
@@ -305,6 +432,49 @@ const PRODUCTS = [
       ericsson: { availability: 99.12, lossP95: 0.68, latencyP95: 88, slaWithin: 81 },
     },
   },
+  {
+    id: "hybrid-broadband",
+    name: "SuperBroadband",
+    availability: 99.76,
+    lossP95: 0.21,
+    latencyP95: 55,
+    slaWithin: 96,
+    monthly: [
+      { month: "Jan", availability: { p50: 99.70, p95: 99.94, mean: 99.76 }, loss: { p50: 0.19, p95: 0.35, mean: 0.22 }, latency: { p50: 51, p95: 65, mean: 55 } },
+      { month: "Feb", availability: { p50: 99.72, p95: 99.94, mean: 99.78 }, loss: { p50: 0.18, p95: 0.33, mean: 0.21 }, latency: { p50: 50, p95: 64, mean: 54 } },
+      { month: "Mar", availability: { p50: 99.68, p95: 99.92, mean: 99.74 }, loss: { p50: 0.21, p95: 0.38, mean: 0.24 }, latency: { p50: 53, p95: 68, mean: 57 } },
+      { month: "Apr", availability: { p50: 99.74, p95: 99.96, mean: 99.80 }, loss: { p50: 0.17, p95: 0.31, mean: 0.20 }, latency: { p50: 50, p95: 63, mean: 54 } },
+      { month: "May", availability: { p50: 99.76, p95: 99.96, mean: 99.82 }, loss: { p50: 0.16, p95: 0.30, mean: 0.19 }, latency: { p50: 49, p95: 62, mean: 53 } },
+      { month: "Jun", availability: { p50: 99.60, p95: 99.88, mean: 99.66 }, loss: { p50: 0.27, p95: 0.46, mean: 0.31 }, latency: { p50: 57, p95: 74, mean: 62 } },
+      { month: "Jul", availability: { p50: 99.72, p95: 99.94, mean: 99.78 }, loss: { p50: 0.19, p95: 0.34, mean: 0.22 }, latency: { p50: 51, p95: 65, mean: 55 } },
+      { month: "Aug", availability: { p50: 99.70, p95: 99.92, mean: 99.76 }, loss: { p50: 0.20, p95: 0.36, mean: 0.23 }, latency: { p50: 52, p95: 67, mean: 56 } },
+      { month: "Sep", availability: { p50: 99.74, p95: 99.96, mean: 99.80 }, loss: { p50: 0.17, p95: 0.31, mean: 0.20 }, latency: { p50: 50, p95: 63, mean: 54 } },
+      { month: "Oct", availability: { p50: 99.78, p95: 99.98, mean: 99.84 }, loss: { p50: 0.15, p95: 0.28, mean: 0.18 }, latency: { p50: 48, p95: 61, mean: 52 } },
+      { month: "Nov", availability: { p50: 99.76, p95: 99.96, mean: 99.82 }, loss: { p50: 0.16, p95: 0.30, mean: 0.19 }, latency: { p50: 49, p95: 62, mean: 53 } },
+    ],
+    carriers: {
+      "5g-primary": { availability: 99.84, lossP95: 0.16, latencyP95: 46, slaWithin: 98 },
+      "satellite-backup": { availability: 99.61, lossP95: 0.32, latencyP95: 58, slaWithin: 94 },
+    },
+    customers: [
+      { name: "Hospital group", slaWithin: 97, availability: 99.82, lossP95: 0.16, latencyP95: 50, status: "improved" },
+      { name: "Retail network", slaWithin: 96, availability: 99.78, lossP95: 0.19, latencyP95: 52, status: "improved" },
+      { name: "Energy provider", slaWithin: 98, availability: 99.88, lossP95: 0.12, latencyP95: 48, status: "improved" },
+      { name: "Financial services", slaWithin: 95, availability: 99.74, lossP95: 0.23, latencyP95: 56, status: "steady" },
+      { name: "Logistics company", slaWithin: 93, availability: 99.66, lossP95: 0.28, latencyP95: 61, status: "steady" },
+      { name: "Multi-site operator", slaWithin: 84, availability: 99.38, lossP95: 0.52, latencyP95: 76, status: "steady" },
+    ],
+    regions: {
+      west: { availability: 99.80, lossP95: 0.18, latencyP95: 52, slaWithin: 97 },
+      central: { availability: 99.74, lossP95: 0.23, latencyP95: 58, slaWithin: 95 },
+      east: { availability: 99.77, lossP95: 0.21, latencyP95: 54, slaWithin: 96 },
+    },
+    vendors: {
+      cisco: { availability: 99.81, lossP95: 0.18, latencyP95: 53, slaWithin: 97 },
+      ericsson: { availability: 99.73, lossP95: 0.24, latencyP95: 57, slaWithin: 95 },
+      starlink: { availability: 99.61, lossP95: 0.32, latencyP95: 58, slaWithin: 94, downlinkMbps: 142, uplinkMbps: 18 },
+    },
+  },
 ];
 
 const PRODUCT_CUSTOMER_MAP = {
@@ -312,6 +482,7 @@ const PRODUCT_CUSTOMER_MAP = {
   enterprise: ["Production house", "Manufacturer", "Bank", "Healthcare provider"],
   government: ["Public agency"],
   education: ["College", "School"],
+  "hybrid-broadband": ["Hospital group", "Financial services", "Energy provider"],
 };
 
 const TECH_ADJUSTMENTS = {
@@ -454,7 +625,8 @@ function selectionFilters(region, vendor, site, technology = "all") {
   return customers.filter(
     (c) =>
       (region === "all" || c.region === region) &&
-      (vendor === "all" || c.vendor === vendor) &&
+      (vendor === "all" ||
+        (vendor === "starlink" ? c.satelliteVendor === "starlink" : c.vendor === vendor)) &&
       (site === "all" || c.site === site) &&
       (technology === "all" || c.technology === technology)
   );
@@ -537,15 +709,33 @@ function renderVendorScorecards(region, technology, site, selectedVendor, onClic
   const container = document.getElementById("vendorScorecards");
   if (!container) return;
   container.innerHTML = "";
+
   const vendors = [
     { id: "cisco", label: VENDOR_LABELS.cisco },
     { id: "ericsson", label: VENDOR_LABELS.ericsson },
+    { id: "inseego", label: VENDOR_LABELS.inseego },
   ];
 
+  // Starlink is the satellite leg vendor for all SuperBroadband customers.
+  // Show its scorecard whenever Starlink is selected as a vendor filter OR
+  // when the SuperBroadband technology filter is active.
+  if (technology === "hybrid" || selectedVendor === "starlink") {
+    vendors.push({ id: "starlink", label: VENDOR_LABELS.starlink, satelliteLeg: true });
+  }
+
   vendors.forEach((vendor) => {
-    const scoped = selectionFilters(region, vendor.id, site, technology);
-    const summary = averageMetrics(scoped);
-    const unavailable = scoped.length === 0;
+    let summary, unavailable;
+
+    if (vendor.satelliteLeg) {
+      const superBroadband = PRODUCTS.find((p) => p.id === "hybrid-broadband");
+      summary = superBroadband?.vendors?.starlink || null;
+      unavailable = !summary;
+    } else {
+      const scoped = selectionFilters(region, vendor.id, site, technology);
+      summary = averageMetrics(scoped);
+      unavailable = scoped.length === 0;
+    }
+
     const status = unavailable ? "na" : slaStatus(summary);
     const statusText = unavailable ? "Not Available" : regionStatusText(summary);
     const metrics = [
@@ -553,22 +743,27 @@ function renderVendorScorecards(region, technology, site, selectedVendor, onClic
       { label: "Packet loss p95", key: "lossP95" },
       { label: "Latency p95", key: "latencyP95" },
     ];
-    const metricsHtml = metrics
+    let metricsHtml = metrics
       .map(({ label, key }) => {
-        const value = summary[key];
+        const value = summary?.[key];
         const metricClass = unavailable ? "" : statusForMetricKey(key, value);
         return `<div class="metric-line"><span>${label}</span><strong class="${metricClass}">${formatMetricValue(key, value)}</strong></div>`;
       })
       .join("");
+    // Satellite leg: append throughput lines (SLA-relevant for managed broadband)
+    if (vendor.satelliteLeg && summary?.downlinkMbps != null) {
+      metricsHtml += `<div class="metric-line"><span>Downlink</span><strong>${summary.downlinkMbps} Mbps</strong></div>`;
+      metricsHtml += `<div class="metric-line"><span>Uplink</span><strong>${summary.uplinkMbps} Mbps</strong></div>`;
+    }
+
     const card = document.createElement("div");
-    const classNames = [
+    card.className = [
       "vendor-card",
       selectedVendor === vendor.id ? "active" : "",
       unavailable ? "unavailable" : "",
     ]
       .filter(Boolean)
       .join(" ");
-    card.className = classNames;
     card.innerHTML = `
       <div class="title-row">
         <h4>${vendor.label} scorecard</h4>
@@ -576,8 +771,10 @@ function renderVendorScorecards(region, technology, site, selectedVendor, onClic
       </div>
       ${metricsHtml}
     `;
-    if (!unavailable) {
+    if (!unavailable && !vendor.satelliteLeg) {
       card.addEventListener("click", () => onClick(vendor.id));
+    } else if (!unavailable && vendor.satelliteLeg) {
+      card.title = "Satellite leg — aggregate KPIs from SuperBroadband product data";
     } else {
       card.setAttribute("aria-disabled", "true");
     }
@@ -592,6 +789,8 @@ function renderVendorChips(selectedVendor, onClick) {
     { id: "all", label: "All vendors" },
     { id: "cisco", label: "Cisco" },
     { id: "ericsson", label: "Ericsson" },
+    { id: "inseego", label: "Inseego" },
+    { id: "starlink", label: "Starlink" },
   ];
 
   vendors.forEach((v) => {
@@ -612,6 +811,7 @@ function renderTechChips(selectedTech, onClick) {
     { id: "all", label: TECH_LABELS.all },
     { id: "4g", label: TECH_LABELS["4g"] },
     { id: "5g", label: TECH_LABELS["5g"] },
+    { id: "hybrid", label: TECH_LABELS["hybrid"] },
   ];
 
   technologies.forEach((tech) => {
@@ -1252,35 +1452,33 @@ function buildProductTrendChart(product) {
   });
 }
 
+const CARRIER_DISPLAY = {
+  "4g":               { label: "4G",               color: "rgba(56, 189, 248, 0.65)" },
+  "5g":               { label: "5G",               color: "rgba(124, 58, 237, 0.65)" },
+  "5g-primary":       { label: "5G Primary",       color: "rgba(56, 189, 248, 0.65)" },
+  "satellite-backup": { label: "Satellite Backup", color: "rgba(245, 158, 11, 0.65)"  },
+};
+
 function buildCarrierChart(product) {
   const canvas = document.getElementById("carrierChart");
   if (!canvas || !product) return;
   const labels = ["Availability", "Loss p95", "Latency p95", "SLA within"];
-  const datasetFor = (tech) => [
-    product.carriers[tech].availability,
-    product.carriers[tech].lossP95,
-    product.carriers[tech].latencyP95,
-    product.carriers[tech].slaWithin,
-  ];
 
   const valueLabelPlugin = {
     id: "carrierValueLabels",
     afterDatasetsDraw(chart) {
       const { ctx } = chart;
       ctx.save();
-
       const formatValue = (value, index) => {
         const precision = index === 2 || index === 3 ? 0 : 2;
         const unit = index === 2 ? " ms" : "%";
         return `${Number(value).toFixed(precision)}${unit}`;
       };
-
       chart.data.datasets.forEach((dataset, datasetIndex) => {
         const meta = chart.getDatasetMeta(datasetIndex);
         meta.data.forEach((bar, index) => {
           const value = dataset.data[index];
           if (value === null || value === undefined) return;
-
           const { x, y } = bar.tooltipPosition();
           ctx.fillStyle = "#ffffff";
           ctx.font = "12px Inter, system-ui, -apple-system, sans-serif";
@@ -1289,29 +1487,23 @@ function buildCarrierChart(product) {
           ctx.fillText(formatValue(value, index), x, y - 8);
         });
       });
-
       ctx.restore();
     },
   };
 
+  const datasets = Object.entries(product.carriers).map(([key, data]) => {
+    const display = CARRIER_DISPLAY[key] || { label: key, color: "rgba(148, 163, 184, 0.6)" };
+    return {
+      label: display.label,
+      data: [data.availability, data.lossP95, data.latencyP95, data.slaWithin],
+      backgroundColor: display.color,
+    };
+  });
+
   if (carrierChart) carrierChart.destroy();
   carrierChart = new Chart(canvas, {
     type: "bar",
-    data: {
-      labels,
-      datasets: [
-        {
-          label: "4G",
-          data: datasetFor("4g"),
-          backgroundColor: "rgba(56, 189, 248, 0.6)",
-        },
-        {
-          label: "5G",
-          data: datasetFor("5g"),
-          backgroundColor: "rgba(124, 58, 237, 0.65)",
-        },
-      ],
-    },
+    data: { labels, datasets },
     plugins: [valueLabelPlugin],
     options: {
       plugins: {
@@ -1475,23 +1667,22 @@ function renderProductVendors(product) {
   const container = document.getElementById("productVendorCards");
   if (!container) return;
   container.innerHTML = "";
-  [
-    { id: "cisco", label: "Cisco" },
-    { id: "ericsson", label: "Ericsson" },
-  ].forEach((vendor) => {
-    const summary = product.vendors[vendor.id];
+  Object.entries(product.vendors).forEach(([id, summary]) => {
+    const label = VENDOR_LABELS[id] || id;
     const status = productStatusClass(summary.slaWithin, "slaWithin");
     const card = document.createElement("div");
     card.className = "vendor-card";
     card.innerHTML = `
       <div class="title-row">
-        <h4>${vendor.label}</h4>
+        <h4>${label}</h4>
         <span class="status-pill ${status}">${status === "good" ? "On target" : status === "warn" ? "At risk" : "Breach"}</span>
       </div>
       <div class="metric-line"><span>Availability</span><strong>${summary.availability.toFixed(2)}%</strong></div>
       <div class="metric-line"><span>Packet loss p95</span><strong>${summary.lossP95.toFixed(2)}%</strong></div>
       <div class="metric-line"><span>Latency p95</span><strong>${summary.latencyP95.toFixed(0)} ms</strong></div>
       <div class="metric-line"><span>SLA within</span><strong>${summary.slaWithin.toFixed(0)}%</strong></div>
+      ${summary.downlinkMbps != null ? `<div class="metric-line"><span>Downlink</span><strong>${summary.downlinkMbps} Mbps</strong></div>` : ""}
+      ${summary.uplinkMbps != null ? `<div class="metric-line"><span>Uplink</span><strong>${summary.uplinkMbps} Mbps</strong></div>` : ""}
     `;
     container.appendChild(card);
   });
@@ -1945,11 +2136,328 @@ function initHeatmapAnnotations() {
   renderNotes();
 }
 
+const HYBRID_DATA = {
+  activeLink: "5G Primary",
+  failoverEvents: 3,
+  satelliteAvailability: 99.2,
+  satelliteLatencyP95: 48,
+  obstructionRate: 0.31,
+  satelliteSNR: 11.2,
+  satelliteDownlink: 142,
+  satelliteUplink: 18,
+  // Operational detail KPIs
+  outageDurationMins: 4,
+  activeAlerts: 1,
+  activeAlertType: "Obstructed",
+  pingDropRateRT: 0.18,
+  priorityDataUsedPct: 62,
+  // Dish alert detail — shown when alert card is clicked
+  dishAlertDetail: {
+    customer: "RetailCore Network",
+    siteName: "Dallas Prime",
+    region: "Central",
+    coordinates: "32.77° N, 96.79° W",
+    alertSince: "2h 14m",
+    skyObstructionPct: 18,
+    baselineDownlink: 142,
+    currentDownlink: 89,
+    baselineUplink: 18,
+    currentUplink: 14,
+  },
+  utilizationHistory: [
+    { label: "Mon", fiveG: 82, satellite: 18 },
+    { label: "Tue", fiveG: 79, satellite: 21 },
+    { label: "Wed", fiveG: 85, satellite: 15 },
+    { label: "Thu", fiveG: 71, satellite: 29 },
+    { label: "Fri", fiveG: 88, satellite: 12 },
+    { label: "Sat", fiveG: 76, satellite: 24 },
+    { label: "Sun", fiveG: 91, satellite: 9 },
+  ],
+};
+
+function renderHybridKpis() {
+  const row = document.getElementById("hybridKpiRow");
+  const pill = document.getElementById("hybridActiveLinkPill");
+  if (!row) return;
+
+  if (pill) pill.textContent = `Active link: ${HYBRID_DATA.activeLink}`;
+
+  const kpis = [
+    {
+      label: "Failover events (30d)",
+      value: HYBRID_DATA.failoverEvents,
+      subtitle: "Target ≤ 5 / month",
+      status: HYBRID_DATA.failoverEvents <= 5 ? "good" : HYBRID_DATA.failoverEvents <= 8 ? "warn" : "bad",
+    },
+    {
+      label: "Satellite availability",
+      value: `${HYBRID_DATA.satelliteAvailability}%`,
+      subtitle: "Target ≥ 99.0%",
+      status: HYBRID_DATA.satelliteAvailability >= 99.0 ? "good" : HYBRID_DATA.satelliteAvailability >= 98.5 ? "warn" : "bad",
+    },
+    {
+      label: "Satellite latency p95",
+      value: `${HYBRID_DATA.satelliteLatencyP95} ms`,
+      subtitle: "Target ≤ 60 ms (LEO)",
+      status: HYBRID_DATA.satelliteLatencyP95 <= 60 ? "good" : HYBRID_DATA.satelliteLatencyP95 <= 80 ? "warn" : "bad",
+    },
+    {
+      label: "Obstruction rate",
+      value: `${HYBRID_DATA.obstructionRate}%`,
+      subtitle: "Target ≤ 0.27%",
+      status: HYBRID_DATA.obstructionRate <= 0.27 ? "good" : HYBRID_DATA.obstructionRate <= 0.30 ? "warn" : "bad",
+    },
+    {
+      label: "Satellite downlink / uplink",
+      value: `↓${HYBRID_DATA.satelliteDownlink} / ↑${HYBRID_DATA.satelliteUplink} Mbps`,
+      subtitle: "Target ↓≥100 / ↑≥10 Mbps",
+      status: HYBRID_DATA.satelliteDownlink >= 100 && HYBRID_DATA.satelliteUplink >= 10 ? "good" : "warn",
+    },
+    {
+      label: "Satellite SNR",
+      value: `${HYBRID_DATA.satelliteSNR} dB`,
+      subtitle: "Target ≥ 9 dB",
+      status: HYBRID_DATA.satelliteSNR >= 9 ? "good" : HYBRID_DATA.satelliteSNR >= 7 ? "warn" : "bad",
+    },
+  ];
+
+  row.innerHTML = "";
+  kpis.forEach(({ label, value, subtitle, status }) => {
+    const card = document.createElement("div");
+    card.className = `kpi-card ${status}`;
+    card.innerHTML = `
+      <div class="kpi-label">${label}</div>
+      <div class="kpi-value">${value}</div>
+      <div class="kpi-subtitle">${subtitle}</div>
+    `;
+    row.appendChild(card);
+  });
+
+  // Operational detail row
+  const opsRow = document.getElementById("hybridOpsKpiRow");
+  if (!opsRow) return;
+
+  const alertStatus = HYBRID_DATA.activeAlerts === 0 ? "good" : "warn";
+  const alertValue = HYBRID_DATA.activeAlerts === 0
+    ? "None"
+    : `${HYBRID_DATA.activeAlerts} — ${HYBRID_DATA.activeAlertType}`;
+
+  const opsKpis = [
+    {
+      label: "Outage duration (24h)",
+      value: `${HYBRID_DATA.outageDurationMins} min`,
+      subtitle: "Target ≤ 10 min / day",
+      status: HYBRID_DATA.outageDurationMins <= 10 ? "good" : HYBRID_DATA.outageDurationMins <= 20 ? "warn" : "bad",
+    },
+    {
+      label: "Active dish alerts",
+      value: alertValue,
+      subtitle: HYBRID_DATA.activeAlerts > 0 ? "Target: none — click for details" : "Target: none",
+      status: alertStatus,
+      clickable: HYBRID_DATA.activeAlerts > 0,
+    },
+    {
+      label: "Ping drop rate (real-time)",
+      value: `${HYBRID_DATA.pingDropRateRT}%`,
+      subtitle: "Target ≤ 0.5%",
+      status: HYBRID_DATA.pingDropRateRT <= 0.5 ? "good" : HYBRID_DATA.pingDropRateRT <= 1.0 ? "warn" : "bad",
+    },
+    {
+      label: "Priority data used",
+      value: `${HYBRID_DATA.priorityDataUsedPct}%`,
+      subtitle: "Target ≤ 80% of cap",
+      status: HYBRID_DATA.priorityDataUsedPct <= 80 ? "good" : HYBRID_DATA.priorityDataUsedPct <= 90 ? "warn" : "bad",
+    },
+  ];
+
+  opsRow.innerHTML = "";
+  opsKpis.forEach(({ label, value, subtitle, status, clickable }) => {
+    const card = document.createElement("div");
+    card.className = `kpi-card ${status}${clickable ? " kpi-card-clickable" : ""}`;
+    card.innerHTML = `
+      <div class="kpi-label">${label}</div>
+      <div class="kpi-value">${value}</div>
+      <div class="kpi-subtitle">${subtitle}</div>
+    `;
+    if (clickable) {
+      card.addEventListener("click", toggleDishAlertDetail);
+    }
+    opsRow.appendChild(card);
+  });
+}
+
+function toggleDishAlertDetail() {
+  const overlay = document.getElementById("dishAlertModal");
+  if (!overlay) return;
+  renderDishAlertModal();
+  overlay.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+
+function closeDishAlertModal() {
+  const overlay = document.getElementById("dishAlertModal");
+  if (!overlay) return;
+  overlay.classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+function renderDishAlertModal() {
+  const panel = document.getElementById("dishAlertPanel");
+  if (!panel) return;
+  const d = HYBRID_DATA.dishAlertDetail;
+  const downlinkDrop = Math.round((1 - d.currentDownlink / d.baselineDownlink) * 100);
+  const uplinkDrop = Math.round((1 - d.currentUplink / d.baselineUplink) * 100);
+
+  panel.innerHTML = `
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <span class="status-pill bad">Breach</span>
+        <div>
+          <div class="modal-title" id="dishAlertModalTitle">${HYBRID_DATA.activeAlertType} — Starlink dish obstructed</div>
+          <div class="modal-subtitle">Active for ${d.alertSince} &nbsp;·&nbsp; ${d.customer} &nbsp;·&nbsp; ${d.siteName}</div>
+        </div>
+      </div>
+      <button class="modal-close-btn" id="dishAlertClose" aria-label="Close">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-col">
+        <div class="modal-section-label">Site details</div>
+        <div class="alert-row"><span>Customer</span><strong>${d.customer}</strong></div>
+        <div class="alert-row"><span>Site</span><strong>${d.siteName}</strong></div>
+        <div class="alert-row"><span>Region</span><strong>${d.region}</strong></div>
+        <div class="alert-row"><span>Coordinates</span><strong>${d.coordinates}</strong></div>
+
+        <div class="modal-section-label" style="margin-top:1.25rem">Sky obstruction</div>
+        <div class="obstruction-bar-wrap">
+          <div class="obstruction-bar-track">
+            <div class="obstruction-bar-fill" style="width:${d.skyObstructionPct}%"></div>
+          </div>
+          <div class="obstruction-bar-labels">
+            <span class="obstruction-bar-pct">${d.skyObstructionPct}% of sky view blocked</span>
+            <span class="obstruction-bar-target">Target: &lt;10%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-col">
+        <div class="modal-section-label">Performance impact</div>
+        <div class="impact-metric">
+          <div class="impact-label">Downlink throughput</div>
+          <div class="impact-values">
+            <span class="impact-baseline">${d.baselineDownlink} Mbps</span>
+            <span class="impact-arrow">→</span>
+            <strong class="bad-text">${d.currentDownlink} Mbps &nbsp;<span class="impact-drop">−${downlinkDrop}%</span></strong>
+          </div>
+          <div class="impact-bar-track">
+            <div class="impact-bar-fill bad" style="width:${Math.round(d.currentDownlink/d.baselineDownlink*100)}%"></div>
+          </div>
+        </div>
+        <div class="impact-metric">
+          <div class="impact-label">Uplink throughput</div>
+          <div class="impact-values">
+            <span class="impact-baseline">${d.baselineUplink} Mbps</span>
+            <span class="impact-arrow">→</span>
+            <strong class="bad-text">${d.currentUplink} Mbps &nbsp;<span class="impact-drop">−${uplinkDrop}%</span></strong>
+          </div>
+          <div class="impact-bar-track">
+            <div class="impact-bar-fill bad" style="width:${Math.round(d.currentUplink/d.baselineUplink*100)}%"></div>
+          </div>
+        </div>
+
+        <div class="modal-action-box">
+          <div class="modal-action-icon">⚑</div>
+          <div>
+            <div class="modal-action-title">Field inspection required</div>
+            <div class="modal-action-body">Dish repositioning or obstruction clearance needed at <strong>${d.siteName}</strong>. Log a site visit to restore full throughput.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("dishAlertClose")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeDishAlertModal();
+  });
+}
+
+let hybridUtilizationChart;
+
+function buildHybridUtilizationChart() {
+  const ctx = document.getElementById("hybridUtilizationChart");
+  if (!ctx) return;
+
+  if (hybridUtilizationChart) hybridUtilizationChart.destroy();
+
+  hybridUtilizationChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: HYBRID_DATA.utilizationHistory.map((d) => d.label),
+      datasets: [
+        {
+          label: "5G (%)",
+          data: HYBRID_DATA.utilizationHistory.map((d) => d.fiveG),
+          backgroundColor: "rgba(56, 189, 248, 0.7)",
+          borderRadius: 4,
+          stack: "utilization",
+        },
+        {
+          label: "Satellite (%)",
+          data: HYBRID_DATA.utilizationHistory.map((d) => d.satellite),
+          backgroundColor: "rgba(168, 85, 247, 0.7)",
+          borderRadius: 4,
+          stack: "utilization",
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { color: "#cbd5f5" },
+          grid: { color: "#1e293b" },
+        },
+        y: {
+          stacked: true,
+          min: 0,
+          max: 100,
+          ticks: { color: "#cbd5f5", callback: (v) => `${v}%` },
+          grid: { color: "#1e293b" },
+        },
+      },
+      plugins: {
+        legend: { labels: { color: "#cbd5f5", font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${ctx.formattedValue}%`,
+          },
+        },
+      },
+    },
+  });
+}
+
 function initOperationsDashboard() {
   buildOpsTransportChart();
   buildRadioQualityChart();
   renderHeatmap();
   initHeatmapAnnotations();
+  renderHybridKpis();
+  buildHybridUtilizationChart();
+
+  // Close dish alert modal when clicking the backdrop
+  const overlay = document.getElementById("dishAlertModal");
+  if (overlay) {
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeDishAlertModal();
+    });
+  }
+  // Close on Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDishAlertModal();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

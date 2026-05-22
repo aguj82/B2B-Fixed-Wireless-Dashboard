@@ -10,7 +10,7 @@
 <body>
   <header class="topbar">
     <div class="topbar-left">
-      <p class="eyebrow">Fixed Wireless Analytics</p>
+      <p class="eyebrow">Wireless Broadband Analytics</p>
       <h1>B2B SLA &amp; Operations Dashboards</h1>
       <p class="subtitle">Switch between the overall B2B performance snapshot and the Operations &amp; Engineering view.</p>
       <div class="dashboard-switch" role="tablist" aria-label="Dashboard selector">
@@ -219,6 +219,29 @@
         </div>
       </div>
     </section>
+    <section class="panel">
+      <div class="panel-header inline">
+        <div>
+          <h2>SuperBroadband link monitor</h2>
+          <p>Per-leg KPIs for the dual-path connectivity product — 5G primary with LEO satellite failover and load balancing.</p>
+        </div>
+        <div class="pill" id="hybridActiveLinkPill">Active link: —</div>
+      </div>
+      <div class="kpi-row hybrid-kpi-row" id="hybridKpiRow"></div>
+      <div class="ops-detail-label">Starlink dish telemetry</div>
+      <div class="kpi-row hybrid-ops-kpi-row" id="hybridOpsKpiRow"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header inline">
+        <div>
+          <h2>Link utilization split</h2>
+          <p>Percentage of traffic routed over the 5G versus satellite leg per day.</p>
+        </div>
+        <div class="pill">Stacked by link</div>
+      </div>
+      <canvas id="hybridUtilizationChart" height="260"></canvas>
+    </section>
   </main>
 
   <main class="page dashboard hidden" id="productDashboard">
@@ -307,6 +330,11 @@
   <footer class="footer">
     Mock dashboard for B2B Fixed Wireless – no live data. Built as a static HTML/CSS/JS example.
   </footer>
+
+  <!-- Dish alert modal -->
+  <div class="modal-overlay hidden" id="dishAlertModal" role="dialog" aria-modal="true" aria-labelledby="dishAlertModalTitle">
+    <div class="modal-panel" id="dishAlertPanel"></div>
+  </div>
 
   <script src="./script.js"></script>
 </body>
